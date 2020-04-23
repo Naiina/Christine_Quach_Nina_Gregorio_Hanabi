@@ -38,7 +38,7 @@ class AI:
         return list(itertools.chain.from_iterable([hand.cards for hand in self.other_hands]))
 
 
-class Cheater(AI):
+class NotCheater(AI):
     """
     This player can see his own cards!
     Algorithm:
