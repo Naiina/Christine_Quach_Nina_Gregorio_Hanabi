@@ -111,7 +111,32 @@ class GameTest(unittest.TestCase):
 
 
     # lines 295, 329
+    def test_add_blue_coin1(self):
+        self.blue_coins = 8
+        self.assertRaises(ValueError,hanabi.deck.Game.add_blue_coin,self)
 
+    def test_add_blue_coin2(self):
+        self.blue_coins = 4
+        hanabi.deck.Game.add_blue_coin(self)
+        self.assertEqual(5,self.blue_coins)
+
+    def test_remove_blue_coin1(self):
+        self.blue_coins = 0
+        self.assertRaises(ValueError,hanabi.deck.Game.remove_blue_coin,self)
+
+    def test_remove_blue_coin2(self):
+        self.blue_coins = 3
+        hanabi.deck.Game.remove_blue_coin(self)
+        self.assertEqual(2,self.blue_coins)
+
+    def test_add_red_coin1(self):
+        self.red_coins = 2
+        self.assertRaises(StopIteration,hanabi.deck.Game.add_red_coin,self)
+
+    def test_add_red_coin2(self):
+        self.red_coins = 0
+        hanabi.deck.Game.add_red_coin(self)
+        self.assertEqual(1,self.red_coins)    
 
 
     # lines 329, 363
@@ -119,7 +144,19 @@ class GameTest(unittest.TestCase):
     
 
     # lines 363, 397
+    def test_clue1(self):
+        game = hanabi.Game(2)
+        game.blue_coins = 4
+        hanabi.deck.Game.clue(game,["R","B"])
+        self.assertEqual(3,game.blue_coins)
 
+    def test_clue2(self):
+        game = hanabi.Game(2)
+        self.assertRaises(ValueError,hanabi.deck.Game.clue,game,["T","B"])
+
+    def test_clue3(self):  
+        game = hanabi.Game(2)
+        self.assertRaises(ValueError,hanabi.deck.Game.clue,game,["R","A"])      
 
 
     # lines 397, 431
