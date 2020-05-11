@@ -356,20 +356,39 @@ class RecommendationStrategy(AI):
     #           takes a string hint, return a string hint
     #     the_most_recent_recommendation
     #       return p/d  1 2 3 4, ex:('p2',playernumer) 
-    #     give_a_hint
+    #     give_a_hint  Christine
     #     hint_into_number
     #     number_into_hint
          
-def hint_into_number(hint):
-    tab=['p1','p2','p3','p4','d1','d2','d3','d4'] ****pb: hint=1 2 3 4 r b j v ???
+def hint_into_number(hint,currentplayernumber):
+#    tab=[['c1A','c2A','c3A','c4A','crA','cjA','cvA','cbA'],['c1B','c2B','c3B','c4A','crA','cjA','cvA','cbA'],['c1A','c2A','c3A','c4A','crA','cjA','cvA','cbA'],['c1A','c2A','c3A','c4A','crA','cjA','cvA','cbA'],['c1A','c2A','c3A','c4A','crA','cjA','cvA','cbA'],['c1A','c2A','c3A','c4A','crA','cjA','cvA','cbA']] ****pb: hint=1 2 3 4 r b j v ???
+ 
+    tabnumber=['1','2','3','4','5']
     i=0
-    found=False
-    while found=False:
-        if tab[i]==hint[0:1]:
-            found=True
-        else:
+    foundnumber=False
+    while i<4:
+        if tabnumber[i]==hint[1]:
+            foundnumber=True
             i+=1   
-    return(i)
+    if foundnumber:
+        i=0
+    else:
+        i=4
+
+    tabplayer=['A','B','C','D','E']  
+    j=0
+    foundplayer=False
+    while not foundplayer:
+        if tabplayer[j]==hint[2]:
+            foundplayer=True
+            else:
+            j+=1   
+    j=j-currentplayernumber
+    if j<0:
+        j+=4          
+    return(i+j)
+
+print(hint_into_number('c1A')
 
 def number_into_hint(number):
     tab=['p1','p2','p3','p4','d1','d2','d3','d4']
