@@ -543,7 +543,7 @@ if __name__ == "__main__":
     #     print("Alice can't play her 1st card")
 
     print("\nLet's start a new game")
-    game = Game(2)
+    game = Game(5)
     print("Here are the hands:")
     print(game.hands)
 
