@@ -340,3 +340,125 @@ class NotCheater(AI):
         act = 'd%d'%myprecious[0][1]
         print('Cheater is doomed and must discard:', act, myprecious)
         return act
+
+
+
+
+
+
+class RecommendationStrategy(AI):
+    #Doc: no_card_has_been__played_since_the_last_hint 
+    #           return bool
+    #     one_card_has_been__played_since_the_last_hint
+    #     deduce_my_move(hint, PlayerHowGaveTheHint)
+    #           return string hint
+    #     deduce_number(player number)  Christine: a un instant donné, determine la 'hatColor' du joueur i
+    #           takes a string hint, return a string hint
+    #     the_most_recent_recommendation
+    #       return p/d  1 2 3 4, ex:('p2',playernumer) 
+    #     give_a_hint
+    #     hint_into_number
+    #     number_into_hint
+         
+def hint_into_number(hint):
+    tab=['p1','p2','p3','p4','d1','d2','d3','d4'] ****pb: hint=1 2 3 4 r b j v ???
+    i=0
+    found=False
+    while found=False:
+        if tab[i]==hint[0:1]:
+            found=True
+        else:
+            i+=1   
+    return(i)
+
+def number_into_hint(number):
+    tab=['p1','p2','p3','p4','d1','d2','d3','d4']
+        return(tab[i])
+  
+def deduce_my_move(hint,PlayerHowGaveTheHint):
+    sum=hint_into__numer(hint)
+    for i in range(1,5):
+        if i!=PlayerHowGaveTheHint
+            sum+=-deduce_number(i)
+    sum+=8*7
+    while sum>8:
+        sum=sum-8
+    return(numer_into_hint(sum))
+def the_most_recent_recommendation():
+    recommendation='nothing'
+    FoundRecommendation=False
+    NumberOfMoves=len(self.move)
+    i=0
+    while not FoundRecommendation:
+        if i+1>NumberOfMoves:
+            FoundRecommendation=True
+        else:
+            if self.move[i-1][0]=='c':
+                FoundRecommendation=True
+                return(
+#what happens if recommendation='nothing'
+                
+        
+
+    
+        
+    
+    def play(self):
+        "Return a random possible action."
+        game = self.game
+        if len(self.move)>0:
+            recommendation=the_most_recent_recommendation
+            if recommendation[0]=='p'     
+                if no_card_has_been__played_since_the_last_hint():
+                    return(recommendation)
+                if one_card_has_been__played_since_the_last_hint):
+                    if game.red_coins<2:
+                        return(recommendation)
+        if game.blue_coins>0:
+            return(give_a_hint())
+        if len(self.move)>0:
+            recommendation=the_most_recent_recommendation
+            if recommendation[0]=='d'
+                return(recommendation)
+        return('d1')
+                
+
+        
+                    
+                    
+            
+        
+    
+        if game.blue_coins == 0:
+            actions=['p','d']
+            random.shuffle(actions)
+            return("%s%d" % (actions[0], random.randint(1,5)))
+        if game.blue_coins == 8:
+            actions=['p','c']
+            random.shuffle(actions)
+            if actions[0]=='p':
+                return("p%d" %random.randint(1,5))
+            else:
+                
+                color=['r','b','y','w','g']
+                colorornumber=random.randint(1,2)
+                if colorornumber==1:
+                    return("c%d" %random.randint(1,5))
+                else:
+                    return("c%s" %(random.choice(color)))
+        else:
+            actions=['d','c','p']
+            random.shuffle(actions)
+            if actions[0]=='c':
+
+                color=['r','b','y','w','g']
+                colorornumber=random.randint(1,2)
+                if colorornumber==1:
+                    return("c%d" %random.randint(1,5))
+                else:
+                    return("c%s" %(random.choice(color)))
+            else:
+                return("%s%d" % (actions[0], random.randint(1,5)))
+            
+
+
