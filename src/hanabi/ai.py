@@ -538,3 +538,104 @@ def one_card_has_been__played_since_the_last_hint():
             
 
 
+
+class Smart(AI):
+
+    def deduce_number(self,hand):
+    """ 
+    Cette fonction donne une recommendation de type liste (ex : R=["p",1]) pour seule main. Mais ici on prend p=-1 et d=3
+    pour que la fonction renvoie R[0]+R[1] qui se trouve entre 0 et 7. 
+    """
+    """
+    On definit 3 types de cartes : 
+        - playable : celles que l'on peut mettre sur une les piles 
+        - dead : les cartes qui sont deja dans les piles (deja jouees)
+        - indispensable : les cartes dont il ne reste qu'un exemplaire (pas encore joue)
+    """
+        game=self.game
+
+        playable = [ (i+1, card.number) for (i, card) in
+                    enumerate(hand.cards)
+                    if game.piles[card.color]+1 == card.number]
+
+        dead = [ i+1 for (i, card) in
+                enumerate(hand.cards)
+                if ( card.number <= game.piles[card.color])]
+
+        indispensable = [ card for card in
+                     hand.cards
+                     if (1+game.discard_pile.cards.count(card))
+                         == game.deck.card_count[card.number]
+                        ]
+    """
+    La recommendation est faite selon les 5 priorites :
+        Numero 1 : Si dans la liste playable et non vide il y en a une de rang 5 on la joue, si il y en a plusieur on joue 
+        la plus petite d'indice.
+        Numero 2 : Si la liste playable est non vide : jouer celle de rang le plus petit, si il y en a plusieurs, on joue la
+        plus petite d'indice.
+        Numero 3 : Si liste dead est non vide : jeter celle d'indice (dans la main) la plus petite. 
+        Numero 4 : Si dead est vide, jeter carte de rang LE PLUS GRAND, PAS dans indispensable. Si il y en a plusieurs, on joue
+        la plus petite d'indice.
+        Numero 5 : jeter carte 1. 
+    """
+
+        R=[0,0]
+        if playable : 
+            R[0]=(-1)
+
+        #CAS NUMERO 1 
+            #on trie les cartes par ordre decroissant de rang, et par anciennete les plus anciennes avant
+            playable.sort(key=lambda p: (-p[1],p[0]))
+            if playable[0][1]==5 :
+                R[1]=playable[0][0]
+                return (R[0]+R[1])
+
+        #CAS NUMERO 2 
+            #on trie les cartes par ordre croissant de rang et par anciennete les plus anciennes avant
+            playable.sort(key=lambda p: (p[1],p[0]))
+            R[1]=playable[0][0]
+            return (R[0]+R[1])
+
+        #CAS NUMERO 3 
+        if dead : 
+            dead.sort()
+            R=[3,dead[0]]
+            return (R[0]+R[1])
+
+        #CAS NUMERO 4
+        if indispensable : 
+            intersection=[ (i+1, card.number) for (i, card) in
+                    enumerate(hand.cards)
+                    if (card not in indispensable)]
+
+            if intersection : 
+                intersection.sort(key=lambda p: (-p[1],p[0]))
+                R[0]=3
+                R[1]=intersection[0][0]
+                return (R[0]+R[1])
+
+        #CAS NUMERO 5
+        R=[3,1]
+        return (R[0]+R[1]) 
+
+
+
+    def give_a_hint(self):
+        """
+        On fait la somme des recommendations (en chiffre) pour chaque main, modulo 7, appele hint. 
+        Puis, a ce chiffre hint, on associe la liste A=[rang ou couleur, numero joueur]. 
+        Enfin, on donne l'indice.
+        """
+        game=self.game
+
+        s=0
+        for hand in self.other_hands :
+            s=s+deduce_number(self,hand)
+        hint=s%7
+
+        IND=[[1,1],[1,2],[1,3],[1,4],["R",1],["R",2],["R",3],["R",4]]
+        A=IND[hint]
+
+        return A 
+        #ou direct hanabi.deck.Game.clue(game,A) c'est comme tu veux haha 
+
