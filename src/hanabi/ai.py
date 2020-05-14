@@ -355,7 +355,7 @@ class RecommendationStrategy(AI):
     #           return string hint
     #     deduce_number(player number)  Christine: a un instant donné, determine la 'hatColor' du joueur i
     #           takes a string hint, return a string hint
-    #     the_most_recent_recommendation
+    #     the_most_recent_recommendation()
     #       return p/d  1 2 3 4, ex:('p2',playernumer) 
     #     give_a_hint  Christine
     #     hint_into_number
@@ -364,30 +364,30 @@ class RecommendationStrategy(AI):
     #     rank_of_second_last_card_played()    return int -1 if no last card played
     #     ran_of_the_last_clue
          
-def hint_into_number(hint,currentplayernumber):
-    tabnumber=['1','2','3','4','5']
-    i=0
-    foundnumber=False
-    while i<4:
-        if tabnumber[i]==hint[1]:
-            foundnumber=True
-        i+=1   
-    if foundnumber:
+    def hint_into_number(hint,currentplayernumber):
+        tabnumber=['1','2','3','4','5']
         i=0
-    else:
-        i=4
-
-    tabplayer=['A','B','C','D','E','A','B','C','D','E']  
-    j=currentplayernumber
-    foundplayer=False
-    while not foundplayer:
-        if tabplayer[j]==hint[2]:
-            foundplayer=True
+        foundnumber=False
+        while i<4:
+            if tabnumber[i]==hint[1]:
+                foundnumber=True
+            i+=1   
+        if foundnumber:
+            i=0
         else:
-            j+=1   
-    j=j-currentplayernumber
-    print(j) 
-    return(i+j)
+            i=4
+
+        tabplayer=['A','B','C','D','E','A','B','C','D','E']  
+        j=currentplayernumber
+        foundplayer=False
+        while not foundplayer:
+            if tabplayer[j]==hint[2]:
+                foundplayer=True
+            else:
+                j+=1   
+        j=j-currentplayernumber
+        print(j) 
+        return(i+j)
 
 
 
@@ -400,141 +400,104 @@ def number_into_hint(number,currentplayernumber):
 
 
   
-def deduce_my_move(hint,PlayerHowGaveTheHint):
-    sum=hint_into__numer(hint)
-    for i in range(1,5):
-        if i!=PlayerHowGaveTheHint
-            sum+=-deduce_number(i,playerHowGaveTheHint)
-    sum+=8*7
-    while sum>8:
-        sum=sum-8
-    return(number_into_hint(sum))
-#not tested yet
+    def deduce_my_move(hint,PlayerHowGaveTheHint):
+        sum=hint_into__numer(hint)
+        for i in range(1,5):
+            if i!=PlayerHowGaveTheHint
+                sum+=-deduce_number(i,playerHowGaveTheHint)
+        sum+=8*7
+        while sum>8:
+            sum=sum-8
+        return(number_into_hint(sum))
+    #not tested yet
 
-def the_most_recent_recommendation():
-    NumberOfMoves=len(self.move)-1
-    i=0
-    while i<=NumberOfMoves:
-        if self.move[NumberOfMoves-i][0]=='c':
-            return(self.move[NumberOfMoves-i])
-        i++
-    return('no recommendation')
-#what happens if recommendation='nothing'
-#tested with move a table. Needs to be tested with self.move
-                
-def rank_of_last_card_played():
-    NumberOfMoves=len(self.move)-1
-    i=0
-    while i<=NumberOfMoves:
-        if self.move[NumberOfMoves-i][0]=='p':
-            return(self.move[i])
-        i+=1
-    return(-1)    
+    def the_most_recent_recommendation(self):
+        NumberOfMoves=len(self.move)-1
+        i=0
+        while i<=NumberOfMoves:
+            if self.move[NumberOfMoves-i][0]=='c':
+                return((self.move[NumberOfMoves-i],i mod 5) #verify this
+            i++
+        return(('no recommendation',-1))
+
+    #tested with move a table. Needs to be tested with self.move
+                    
+    def rank_of_last_card_played(self):
+        NumberOfMoves=len(self.move)-1
+        i=0
+        while i<=NumberOfMoves:
+            if self.move[NumberOfMoves-i][0]=='p':
+                return(self.move[i])
+            i+=1
+        return(-1)    
 
 
-def rank_of_second_last_card_played():
-    NumberOfMoves=len(self.move)-1
-    i=0
-    FirstClue=False
-    while i<=NumberOfMoves and not FirstClue:
-        if move[NumberOfMoves-i][0]=='p':
-            FirstClue=True
-        i+=1
-    j=i
-    if FirstClue:
-        while j<=NumberOfMoves:
-            if self.move[NumberOfMoves-j][0]=='p':
-                return(self.move[NumberOfMoves-j])
-            j+=1
+    def rank_of_second_last_card_played(self):
+        NumberOfMoves=len(self.move)-1
+        i=0
+        FirstClue=False
+        while i<=NumberOfMoves and not FirstClue:
+            if move[NumberOfMoves-i][0]=='p':
+                FirstClue=True
+            i+=1
+        j=i
+        if FirstClue:
+            while j<=NumberOfMoves:
+                if self.move[NumberOfMoves-j][0]=='p':
+                    return(self.move[NumberOfMoves-j])
+                j+=1
+            
+        return(-1)
+    #try with move a tab
         
-    return(-1)
-#try with move a tab
-    
-def rank_of_last_clue():
-    NumberOfMoves=len(self.move)-1
-    i=0
-    while i<=NumberOfMoves:
-        if self.move[NumberOfMoves-i][0]=='c':
-            return(self.move[i])
-        i+=1
-    return(-1)    
-def no_card_has_been__played_since_the_last_hint():
-    if rank_of_last_clue()<0:
-        return(False)
-    if rank_of_last_card_played()<0:
-        return(True)
-    return(rank_of_last_clue()<rank_of_last_card_played())
+    def rank_of_last_clue(self):
+        NumberOfMoves=len(self.move)-1
+        i=0
+        while i<=NumberOfMoves:
+            if self.move[NumberOfMoves-i][0]=='c':
+                return(self.move[i])
+            i+=1
+        return(-1)    
+    def no_card_has_been__played_since_the_last_hint(self):
+        if rank_of_last_clue(self)<0:
+            return(False)
+        if rank_of_last_card_played(self)<0:
+            return(True)
+        return(rank_of_last_clue()<rank_of_last_card_played(self))
 
-def one_card_has_been__played_since_the_last_hint():
-    if rank_of_last_clue()<0:
-        return(False)
-    if rank_of_last_card_played()<0:
-        return(False)
-    if rank_of_second_last_clue()<0:
-        return(rank_of_last_clue()>rank_of_last_card_played())
+    def one_card_has_been__played_since_the_last_hint(self):
+        if rank_of_last_clue(self)<0:
+            return(False)
+        if rank_of_last_card_played(self)<0:
+            return(False)
+        if rank_of_second_last_clue(self)<0:
+            return(rank_of_last_clue(self)>rank_of_last_card_played(self))
 
-    return(rank_of_last_clue()>rank_of_last_card_played() and rank_of_last_clue()<rank_of_second_last_card_played())
+        return(rank_of_last_clue()>rank_of_last_card_played(self) and rank_of_last_clue(self)<rank_of_second_last_card_played(self))
 
 
-    
+        
         
     
     def play(self):
         "Return a random possible action."
         game = self.game
         if len(self.move)>0:
-            recommendation=the_most_recent_recommendation
+            recommendation=deduce_my_move(the_most_recent_recommendation(self))
             if recommendation[0]=='p'     
-                if no_card_has_been__played_since_the_last_hint():
+                if no_card_has_been__played_since_the_last_hint(self):
                     return(recommendation)
-                if one_card_has_been__played_since_the_last_hint):
+                if one_card_has_been__played_since_the_last_hint(self):
                     if game.red_coins<2:
                         return(recommendation)
         if game.blue_coins>0:
-            return(give_a_hint())
+            return(give_a_hint(self))
         if len(self.move)>0:
-            recommendation=the_most_recent_recommendation
+            recommendation=deduce_my_move(the_most_recent_recommendation(self))
             if recommendation[0]=='d'
                 return(recommendation)
         return('d1')
-                
-
-        
-                    
-                    
-            
-        
-    
-        if game.blue_coins == 0:
-            actions=['p','d']
-            random.shuffle(actions)
-            return("%s%d" % (actions[0], random.randint(1,5)))
-        if game.blue_coins == 8:
-            actions=['p','c']
-            random.shuffle(actions)
-            if actions[0]=='p':
-                return("p%d" %random.randint(1,5))
-            else:
-                
-                color=['r','b','y','w','g']
-                colorornumber=random.randint(1,2)
-                if colorornumber==1:
-                    return("c%d" %random.randint(1,5))
-                else:
-                    return("c%s" %(random.choice(color)))
-        else:
-            actions=['d','c','p']
-            random.shuffle(actions)
-            if actions[0]=='c':
-
-                color=['r','b','y','w','g']
-                colorornumber=random.randint(1,2)
-                if colorornumber==1:
-                    return("c%d" %random.randint(1,5))
-                else:
-                    return("c%s" %(random.choice(color)))
-            else:
-                return("%s%d" % (actions[0], random.randint(1,5)))
+ 
             
 
 
