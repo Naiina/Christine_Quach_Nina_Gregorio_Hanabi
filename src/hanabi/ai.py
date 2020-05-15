@@ -455,7 +455,7 @@ class RecommendationStrategy(AI):
             s=s+deduce_number(self,hand)
         hint=s%7
 
-        IND=[[1,1],[1,2],[1,3],[1,4],["R",1],["R",2],["R",3],["R",4]]
+        IND=['c11','c12','c13','c14','cr1','cr2','cr3','cr4']
         A=IND[hint]
 
         return A 
