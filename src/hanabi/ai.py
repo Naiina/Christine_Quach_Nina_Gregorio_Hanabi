@@ -508,28 +508,28 @@ class RecommendationStrategy(AI):
     #not tested yet
 
     def the_most_recent_recommendation(self):
-        NumberOfMoves=len(self.move)-1
+        NumberOfMoves=len(self.moves)-1
         i=0
         while i<=NumberOfMoves:
             if self.move[NumberOfMoves-i][0]=='c':
-                return((self.move[NumberOfMoves-i],i%5)) #verify this
+                return((self.moves[NumberOfMoves-i],i%5)) #verify this
             i+=1
         return(('no recommendation',-1))
 
-    #tested with move a table. Needs to be tested with self.move
+    #tested with move a table. Needs to be tested with self.moves
                     
     def rank_of_last_card_played(self):
-        NumberOfMoves=len(self.move)-1
+        NumberOfMoves=len(self.moves)-1
         i=0
         while i<=NumberOfMoves:
-            if self.move[NumberOfMoves-i][0]=='p':
-                return(self.move[i])
+            if self.moves[NumberOfMoves-i][0]=='p':
+                return(self.moves[i])
             i+=1
         return(-1)    
 
 
     def rank_of_second_last_card_played(self):
-        NumberOfMoves=len(self.move)-1
+        NumberOfMoves=len(self.moves)-1
         i=0
         FirstClue=False
         while i<=NumberOfMoves and not FirstClue:
@@ -539,19 +539,19 @@ class RecommendationStrategy(AI):
         j=i
         if FirstClue:
             while j<=NumberOfMoves:
-                if self.move[NumberOfMoves-j][0]=='p':
-                    return(self.move[NumberOfMoves-j])
+                if self.moves[NumberOfMoves-j][0]=='p':
+                    return(self.moves[NumberOfMoves-j])
                 j+=1
             
         return(-1)
     #try with move a tab
         
     def rank_of_last_clue(self):
-        NumberOfMoves=len(self.move)-1
+        NumberOfMoves=len(self.moves)-1
         i=0
         while i<=NumberOfMoves:
-            if self.move[NumberOfMoves-i][0]=='c':
-                return(self.move[i])
+            if self.moves[NumberOfMoves-i][0]=='c':
+                return(self.moves[i])
             i+=1
         return(-1)    
     def no_card_has_been__played_since_the_last_hint(self):
@@ -578,8 +578,8 @@ class RecommendationStrategy(AI):
     def play(self):
         "Return a random possible action."
         game = self.game
-        if len(self.move)>0:
-            recommendation=deduce_my_move(the_most_recent_recommendation(self))
+        if len(self.moves)>0:
+            recommendation=deduce_my_moves(the_most_recent_recommendation(self))
             if recommendation[0]=='p':     
                 if no_card_has_been__played_since_the_last_hint(self):
                     return(recommendation)
@@ -588,8 +588,8 @@ class RecommendationStrategy(AI):
                         return(recommendation)
         if game.blue_coins>0:
             return(give_a_hint(self))
-        if len(self.move)>0:
-            recommendation=deduce_my_move(the_most_recent_recommendation(self))
+        if len(self.moves)>0:
+            recommendation=deduce_my_moves(the_most_recent_recommendation(self))
             if recommendation[0]=='d':
                 return(recommendation)
         return('d1')

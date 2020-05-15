@@ -288,7 +288,7 @@ class Game:
                 choice = _choice
             else:  # assume it is a list
                 choice = _choice.pop(0)
-                self.log('hanabi (auto)>', choice)
+                self.log('hanabi (auto)>', choicaie)
             # so here, choice is a 2 or 3 letters code:
             #  d2 (discard 2nd card)
             #  cR (give Red clue) ... will become cRA (give Red to Alice)
