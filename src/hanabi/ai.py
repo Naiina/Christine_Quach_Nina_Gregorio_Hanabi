@@ -452,7 +452,7 @@ class RecommendationStrategy(AI):
 
         s=0
         for hand in self.other_hands :
-            s=s+deduce_number(self,hand)
+            s=s+self.deduce_number(hand)
         hint=s%7
 
         IND=['c11','c12','c13','c14','cr1','cr2','cr3','cr4']
@@ -461,7 +461,7 @@ class RecommendationStrategy(AI):
         return A 
         #ou direct hanabi.deck.Game.clue(game,A) c'est comme tu veux haha 
 
-    def hint_into_number(hint,currentplayernumber):
+    def hint_into_number(self,hint,currentplayernumber):
         tabnumber=['1','2','3','4','5']
         i=0
         foundnumber=False
@@ -473,8 +473,7 @@ class RecommendationStrategy(AI):
             i=0
         else:
             i=4
-
-        tabplayer=['A','B','C','D','E','A','B','C','D','E']  
+        tabplayer=['1','2','3','4','5','1','2','3','4','5'] 
         j=currentplayernumber
         foundplayer=False
         while not foundplayer:
@@ -488,7 +487,9 @@ class RecommendationStrategy(AI):
 
 
 
-    def number_into_hint(number,currentplayernumber):
+    def number_into_hint(self,number,currentplayernumber):
+        print('number')
+        print(number)
         tab=[['c1B','c1C','c1D','c1E','crB','crC','crD','crE'],['c1C','c1D','c1E','c1A','crC','crD','crE','crA',],['c1D','c1E','c1A','c1B','crD','crE','crA','crB'],['c1E','c1A','c1B','c1C','crE','crA','crB','crC',],
 ['c1A','c1B','c1C','c1D','crA','crB','crC','crD']]
         return(tab[currentplayernumber][number])
@@ -496,40 +497,41 @@ class RecommendationStrategy(AI):
 
 
   
-    def deduce_my_move(hint,PlayerHowGaveTheHint):
-        sum=hint_into__numer(hint)
+    def deduce_my_moves(self,hint,PlayerHowGaveTheHint):
+        sum=self.hint_into_number(hint,1)
         for i in range(1,5):
             if i!=PlayerHowGaveTheHint:
-                sum+=-deduce_number(i,playerHowGaveTheHint)
-        sum+=8*7
-        while sum>8:
+                #sum+=-self.deduce_number(hand)  
+                print()  
+            sum+=8*7
+        while sum>=8:
             sum=sum-8
-        return(number_into_hint(sum))
-    #not tested yet
+        return(self.number_into_hint(sum,1))
+
 
     def the_most_recent_recommendation(self):
-        NumberOfMoves=len(self.moves)-1
+        NumberOfMoves=len(self.game.moves)-1
         i=0
         while i<=NumberOfMoves:
-            if self.move[NumberOfMoves-i][0]=='c':
-                return((self.moves[NumberOfMoves-i],i%5)) #verify this
+            if self.game.moves[NumberOfMoves-i][0]=='c':
+                return((self.game.moves[NumberOfMoves-i],i%5)) #verify this
             i+=1
         return(('no recommendation',-1))
 
-    #tested with move a table. Needs to be tested with self.moves
+    #tested with move a table. Needs to be tested with self.game.moves
                     
     def rank_of_last_card_played(self):
-        NumberOfMoves=len(self.moves)-1
+        NumberOfMoves=len(self.game.moves)-1
         i=0
         while i<=NumberOfMoves:
-            if self.moves[NumberOfMoves-i][0]=='p':
-                return(self.moves[i])
+            if self.game.moves[NumberOfMoves-i][0]=='p':
+                return(self.game.moves[i])
             i+=1
         return(-1)    
 
 
     def rank_of_second_last_card_played(self):
-        NumberOfMoves=len(self.moves)-1
+        NumberOfMoves=len(self.game.moves)-1
         i=0
         FirstClue=False
         while i<=NumberOfMoves and not FirstClue:
@@ -539,37 +541,37 @@ class RecommendationStrategy(AI):
         j=i
         if FirstClue:
             while j<=NumberOfMoves:
-                if self.moves[NumberOfMoves-j][0]=='p':
-                    return(self.moves[NumberOfMoves-j])
+                if self.game.moves[NumberOfMoves-j][0]=='p':
+                    return(self.game.moves[NumberOfMoves-j])
                 j+=1
             
         return(-1)
     #try with move a tab
         
     def rank_of_last_clue(self):
-        NumberOfMoves=len(self.moves)-1
+        NumberOfMoves=len(self.game.moves)-1
         i=0
         while i<=NumberOfMoves:
-            if self.moves[NumberOfMoves-i][0]=='c':
-                return(self.moves[i])
+            if self.game.moves[NumberOfMoves-i][0]=='c':
+                return(self.game.moves[i])
             i+=1
         return(-1)    
     def no_card_has_been__played_since_the_last_hint(self):
-        if rank_of_last_clue(self)<0:
+        if self.rank_of_last_clue()<0:
             return(False)
-        if rank_of_last_card_played(self)<0:
+        if self.rank_of_last_card_played()<0:
             return(True)
-        return(rank_of_last_clue()<rank_of_last_card_played(self))
+        return(self.rank_of_last_clue()<self.rank_of_last_card_played())
 
     def one_card_has_been__played_since_the_last_hint(self):
-        if rank_of_last_clue(self)<0:
+        if self.rank_of_last_clue()<0:
             return(False)
-        if rank_of_last_card_played(self)<0:
+        if self.rank_of_last_card_played()<0:
             return(False)
-        if rank_of_second_last_clue(self)<0:
-            return(rank_of_last_clue(self)>rank_of_last_card_played(self))
+        if self.rank_of_second_last_clue()<0:
+            return(self.rank_of_last_clue()>self.rank_of_last_card_played())
 
-        return(rank_of_last_clue()>rank_of_last_card_played(self) and rank_of_last_clue(self)<rank_of_second_last_card_played(self))
+        return(self.rank_of_last_clue()>self.rank_of_last_card_played() and self.rank_of_last_clue()<self.rank_of_second_last_card_played())
 
 
         
@@ -578,18 +580,19 @@ class RecommendationStrategy(AI):
     def play(self):
         "Return a random possible action."
         game = self.game
-        if len(self.moves)>0:
-            recommendation=deduce_my_moves(the_most_recent_recommendation(self))
+        if len(self.game.moves)>0:
+            recommendation=self.deduce_my_moves(*self.the_most_recent_recommendation())
             if recommendation[0]=='p':     
-                if no_card_has_been__played_since_the_last_hint(self):
+                if self.no_card_has_been__played_since_the_last_hint():
                     return(recommendation)
-                if one_card_has_been__played_since_the_last_hint(self):
+                if self.one_card_has_been__played_since_the_last_hint():
                     if game.red_coins<2:
                         return(recommendation)
         if game.blue_coins>0:
-            return(give_a_hint(self))
-        if len(self.moves)>0:
-            recommendation=deduce_my_moves(the_most_recent_recommendation(self))
+            return(self.give_a_hint())
+        if len(self.game.moves)>0:
+            (a,b)=self.the_most_recent_recommendation()
+            recommendation=self.deduce_my_moves(a,b)
             if recommendation[0]=='d':
                 return(recommendation)
         return('d1')
