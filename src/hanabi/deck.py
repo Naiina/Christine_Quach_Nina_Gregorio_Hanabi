@@ -228,6 +228,7 @@ class Game:
 
         # record starting deck and moves, for replay
         self.moves = []
+        self.memoire=[-1,-1,-1,-1,-1]
         self.starting_deck = copy.deepcopy(self.deck)
 
         self.hands = self.deck.deal(len(self.players))

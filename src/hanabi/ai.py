@@ -345,7 +345,7 @@ class NotCheater(AI):
 
 
 
-class RecommendationStrategy(AI):
+class RecommendationStrategy(AI): 
     #Doc: 
     # no_card_has_been__played_since_the_last_hint 
     #           return bool
@@ -401,7 +401,8 @@ class RecommendationStrategy(AI):
     """
 
         R=[0,0]
-        if playable : 
+
+        if playable: 
             R[0]=(-1)
 
         #CAS NUMERO 1 
@@ -409,24 +410,21 @@ class RecommendationStrategy(AI):
             playable.sort(key=lambda p: (-p[1],p[0]))
             if playable[0][1]==5 :
                 R[1]=playable[0][0]
-                print("deduce_number")
-                print(R[0]+R[1])
+
                 return (R[0]+R[1])
 
         #CAS NUMERO 2 
             #on trie les cartes par ordre croissant de rang et par anciennete les plus anciennes avant
             playable.sort(key=lambda p: (p[1],p[0]))
             R[1]=playable[0][0]
-            print("deduce_number")
-            print(R[0]+R[1])
+
             return (R[0]+R[1])
 
         #CAS NUMERO 3 
         if dead : 
             dead.sort()
             R=[3,dead[0]]
-            print("deduce_number")
-            print(R[0]+R[1])
+
             return (R[0]+R[1])
 
         #CAS NUMERO 4
@@ -439,15 +437,13 @@ class RecommendationStrategy(AI):
                 intersection.sort(key=lambda p: (-p[1],p[0]))
                 R[0]=3
                 R[1]=intersection[0][0]
-                print("deduce_number")
-                print(R[0]+R[1])
+
                 return (R[0]+R[1])
 
         #CAS NUMERO 5
         R=[3,1]
-        print("deduce_number")
-        print(R[0]+R[1])
-        return (R[0]+R[1]) 
+
+        return(R[0]+R[1]) 
 
 
 
@@ -462,12 +458,10 @@ class RecommendationStrategy(AI):
         s=0
         for hand in self.other_hands :
             s=s+self.deduce_number(hand)
-        hint=s%7
+        hint=s%8
 
         IND=['c11','c12','c13','c14','cr1','cr2','cr3','cr4']
         A=IND[hint]
-        print("hint given")
-        print(A)
         return A 
         
         #ou direct hanabi.deck.Game.clue(game,A) c'est comme tu veux haha 
@@ -493,33 +487,22 @@ class RecommendationStrategy(AI):
     def deduce_my_moves(self,hint,PlayerHowGaveTheHint):
         game=self.game
         sum=self.hint_into_number(hint,PlayerHowGaveTheHint)
-        print("sum ini")
-        print(sum)
         k=0
         for hand in self.other_hands:
             k+=1
             if k!=PlayerHowGaveTheHint:
                     sum+=-self.deduce_number(hand)   
-        sum=sum%7
-        print("deduce_my_move: sum")
-        print(sum)
-        print("deduce_my move: number_into_hint(sum)")
-        print(self.number_into_hint(sum))
+        sum=sum%8
         return(self.number_into_hint(sum))
 
 
     def the_most_recent_recommendation(self):
-        '''retourne l'indice sous forme c... et le numéro du oueur qui l'a donné par rapport au oueur courant'''
+        '''retourne l'indice sous forme c... et le numéro du joueur qui l'a donné par rapport au joueur courant'''
         NumberOfMoves=len(self.game.moves)-1
-        print("NumberOfMoves")
-        print(NumberOfMoves)
         i=0
         while i<=NumberOfMoves:
-            print(self.game.moves[NumberOfMoves-i][0])
             if self.game.moves[NumberOfMoves-i][0]=='c':
                 if (i+1)%5!=0:
-                    print("the_most_recent_recommendation")
-                    print(self.game.moves[NumberOfMoves-i],5-(i+1)%5)
                     return((self.game.moves[NumberOfMoves-i],5-(i+1)%5)) 
             i+=1
         return(('no recommendation',-1))
@@ -577,26 +560,36 @@ class RecommendationStrategy(AI):
             return(self.rank_of_last_clue()>self.rank_of_last_card_played())
 
         return(self.rank_of_last_clue()>self.rank_of_last_card_played() and self.rank_of_last_clue()<self.rank_of_second_last_card_played())
-
+    def current_player_number(self):
+        i=len(self.game.moves)
+        return(i%5)
 
         
         
     
     def play(self):
         game = self.game
+        print(self.game.memoire)
         if len(self.game.moves)>0:
-            recommendation=self.deduce_my_moves(*self.the_most_recent_recommendation())
-            print("recommendation")
-            print(self.the_most_recent_recommendation())
+            recommendation=self.game.memoire[self.current_player_number()]
+            print("recomm")
             print(recommendation)
             if recommendation[0]=='p':     
                 if self.no_card_has_been__played_since_the_last_hint():
                     return(recommendation)
-                #if self.one_card_has_been__played_since_the_last_hint():
-                    #if game.red_coins<2:
-                        #return(recommendation)
+                if self.one_card_has_been__played_since_the_last_hint():
+                    if game.red_coins<2:
+                        return(recommendation)
         if game.blue_coins>0:
-            return(self.give_a_hint())
+            h=self.give_a_hint()
+            c=self.current_player_number()
+            print(c)
+            for i in range(0,5):
+                if i!=c:
+                    self.game.memoire[i]=self.deduce_my_moves(h,(c+i)%5)
+            print("hint")
+            print(h)
+            return(h)
         if len(self.game.moves)>0:
             (a,b)=self.the_most_recent_recommendation()
             recommendation=self.deduce_my_moves(a,b)
