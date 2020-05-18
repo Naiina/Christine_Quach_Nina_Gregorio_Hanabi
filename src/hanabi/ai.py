@@ -586,7 +586,7 @@ class RecommendationStrategy(AI):
             print(c)
             for i in range(0,5):
                 if i!=c:
-                    self.game.memoire[i]=self.deduce_my_moves(h,(c+i)%5)
+                    self.game.memoire[i]=self.deduce_my_moves(h,(i-c)%5)
             print("hint")
             print(h)
             return(h)
