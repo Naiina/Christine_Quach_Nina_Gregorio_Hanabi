@@ -543,9 +543,10 @@ if __name__ == "__main__":
     # except ValueError:
     #     print("Alice can't play her 1st card")
 
-    print("\nLet's start a new game")
-    game = Game(5)
-    print("Here are the hands:")
-    print(game.hands)
+    for i in range(100):
+        print("\nLet's start a new game")
+        game = Game(5)
+        print("Here are the hands:")
+        print(game.hands)
 
-    game.run()
+        game.run()
