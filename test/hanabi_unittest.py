@@ -160,6 +160,22 @@ class GameTest(unittest.TestCase):
 
 
     # lines 397, 431
+    
+class AiTest(unittest.TestCase):
+
+    def test_deduce_number_1(self):
+    	game = hanabi.Game(5)
+        c1 = hanabi.deck.Card(hanabi.deck.Color.Blue,5)
+        c2 = hanabi.deck.Card(hanabi.deck.Color.Red,2)
+        c3 = hanabi.deck.Card(hanabi.deck.Color.Green,4)
+        c4 = hanabi.deck.Card(hanabi.deck.Color.Blue,2)
+        c5 = hanabi.deck.Card(hanabi.deck.Color.Yellow,2)
+        hand=hanabi.deck.Hand([c1,c2,c3,c4,c5])   
+        game.piles[hanabi.deck.Color.Blue]=4
+        game.piles[hanabi.deck.Color.Red]=1
+        game.piles[hanabi.deck.Color.Green]=3
+        game.piles[hanabi.deck.Color.Yellow]=1
+        self.assertEqual(hanabi.ai.RecommendationStrategy.deduce_number(self,hand), 0)
 
 
 
