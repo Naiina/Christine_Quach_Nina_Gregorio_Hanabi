@@ -29,14 +29,7 @@ Puis nous avons apporté des ameliorations de strategie. Il a donc fallu modifie
 -Algo RecommendationStrategy_3
 	-une liste qui tient compte du nombre de joueurs pouvant jouer d'affilé pour optimiser l'algo précédent (nécéssité de modifier la maorité des fonctions en conséquence)
 
-	
-```python
-    def add_blue_coin(self):
-        if self.blue_coins == 8:
-            raise ValueError("Already 8 blue coins. Can't get an extra one.")
-        self.blue_coins += 1
 
-```
 
 
 ## Tests unitaires ou de non-régression
@@ -63,30 +56,28 @@ Le script `plot_games.py` lance les AI 10000 fois.
 
 
 
-![Histogramme de l'AI NotCheater](src/hanabi/NotCheater_10000.png)
+![Histogramme de l'AI NotCheater](src/hanabi/NotCheater_10000.png)    
 
 
-![Les 3 histogrammes de l'AI Random](src/hanabi/Random_10000.png)
+![Les 3 histogrammes de l'AI Random](src/hanabi/Random_10000.png)    
 Le score moyen obtenu est de 1.97 pour le NotCheater et de 1.26 pour le Random ce qui est evidament peu satisfaisant. L'algorithme NotCheater dans des indices sans forcément tenter de compltéter des demi-indices ce qui explique que peu de joueurs ont assez d'informations pour poser une carte. Il consomme de plus beaucoup d'indices ce qui oblige les joueurs a jetter souvent; Jettant à l'aveugle le jeu est rapidement bolqué. 
 
 ### AI RecommendationStrategy 
 
-![Histogramme de l'AI RecommendationStrategy](src/hanabi/RecommendationStrategy_10000.png)
+![Histogramme de l'AI RecommendationStrategy](src/hanabi/RecommendationStrategy_10000.png)    
 Le score moyen est de 21.20, ce qui est étonnant car l'article atteind 23. Il nous semble pourtant avoir suivi les instruction précises du document. 
 
 ### AI RecommendationStrategy avec indices optimisés
-![Histogramme de l'AI RecommendationStrategy_3](src/hanabi/RecommendationStrategy_3)
+![Histogramme de l'AI RecommendationStrategy_3](src/hanabi/RecommendationStrategy_3)    
 Le score moyen est de 23.17, ce qui est un peu suppérieur à l'article. Pourtant certains jeux se terminent avec un score iférieur à 15 ce qui n'était pas observé pour l'algo précédent. Certaines cartes sont certainement jetée de façon non optimales et bloquent le jeu. 
 
 
 ### AI RecommendationStrategy avec indices optimisés version 2
-![Histogramme de l'AI RecommendationStrategy_4](src/hanabi/RecommendationStrategy_4.png)
+![Histogramme de l'AI RecommendationStrategy_4](src/hanabi/RecommendationStrategy_4.png)    
 Le score moyen est de 23.45. On a réduit les très mauvais résultats. Il faudrait optimiser le réglage des paramètres, voir faire trois phases.
 
 ## Conclusion et perspectives
-
-Parce qu'il est toujours bon d'aider son lecteur à retenir les points importants,
-et lui donner des nouvelles pistes de réflexion.    
+ 
 
 Il serait intéréssant de pouvoir indicer au joueurs suivant le premier joueur qui pose une carte, de jouer par dessus celle ci si cela est possible, sans avoir besoin d'un indice suplémentaire.    
 Par exemple:    
