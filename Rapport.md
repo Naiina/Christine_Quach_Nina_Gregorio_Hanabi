@@ -63,24 +63,24 @@ Le script `plot_games.py` lance les AI 10000 fois.
 
 
 
-![Histogramme de l'AI NotCheater](images/NotCheater_10000.png)
+![Histogramme de l'AI NotCheater](src/hanabi/NotCheater_10000.png)
 
 
-![Les 3 histogrammes de l'AI Random](images/Random_10000.png)
+![Les 3 histogrammes de l'AI Random](src/hanabi/Random_10000.png)
 Le score moyen obtenu est de 1.97 pour le NotCheater et de 1.26 pour le Random ce qui est evidament peu satisfaisant. L'algorithme NotCheater dans des indices sans forcément tenter de compltéter des demi-indices ce qui explique que peu de joueurs ont assez d'informations pour poser une carte. Il consomme de plus beaucoup d'indices ce qui oblige les joueurs a jetter souvent; Jettant à l'aveugle le jeu est rapidement bolqué. 
 
 ### AI RecommendationStrategy 
 
-![Histogramme de l'AI RecommendationStrategy](images/RecommendationStrategy_10000.png)
+![Histogramme de l'AI RecommendationStrategy](src/hanabi/RecommendationStrategy_10000.png)
 Le score moyen est de 21.20, ce qui est étonnant car l'article atteind 23. Il nous semble pourtant avoir suivi les instruction précises du document. 
 
 ### AI RecommendationStrategy avec indices optimisés
-![Histogramme de l'AI RecommendationStrategy_3](images/RecommendationStrategy_3)
+![Histogramme de l'AI RecommendationStrategy_3](src/hanabi/RecommendationStrategy_3)
 Le score moyen est de 23.17, ce qui est un peu suppérieur à l'article. Pourtant certains jeux se terminent avec un score iférieur à 15 ce qui n'était pas observé pour l'algo précédent. Certaines cartes sont certainement jetée de façon non optimales et bloquent le jeu. 
 
 
 ### AI RecommendationStrategy avec indices optimisés version 2
-![Histogramme de l'AI RecommendationStrategy_4](images/RecommendationStrategy_4.py)
+![Histogramme de l'AI RecommendationStrategy_4](src/hanabi/RecommendationStrategy_4.py)
 Le score moyen est de 23.45. On a réduit les très mauvais résultats. Il faudrait optimiser le réglage des paramètres, voir faire trois phases.
 
 ## Conclusion et perspectives
