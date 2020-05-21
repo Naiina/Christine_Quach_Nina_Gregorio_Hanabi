@@ -476,9 +476,11 @@ class RecommendationStrategy(AI):
 
   
     def deduce_my_moves(self,hint,PlayerHowGaveTheHint):
-        '''
-        a partir du numéro qu'elle reçoit cette fonction renvoie ce que le joueur doit jouer
-        '''
+        """
+        Cette fonction prend en entree l'indice global qui a ete donne, et le joueur qui l'a donne. Puis, il interprete l'indice
+        global qui se transforme donc en une recommendation personnalisee, et renvoie l'action qui lui a ete recommandee : Chaine
+        de characteres "p ou d"+"chiffre de la carte"
+        """
         game=self.game
         sum=self.hint_into_number(hint,PlayerHowGaveTheHint)
         k=0
@@ -491,7 +493,9 @@ class RecommendationStrategy(AI):
 
 
     def the_most_recent_recommendation(self):
-        '''retourne l'indice sous forme c... et le numéro du joueur qui l'a donné par rapport au joueur courant'''
+        """
+        Retourne l'indice sous forme c... et le numéro du joueur qui l'a donné par rapport au joueur courant
+        """
         NumberOfMoves=len(self.game.moves)-1
         i=0
         while i<=NumberOfMoves:
@@ -503,6 +507,9 @@ class RecommendationStrategy(AI):
 #not a recommendation given by himself
                     
     def rank_of_last_card_played(self):
+        """
+        Renvoie il y a combien de tours la derniere carte a ete jouee (et non jetee). Si il ny en a pas, renvoie -1
+        """
         NumberOfMoves=len(self.game.moves)-1
         i=0
         while i<=NumberOfMoves:
@@ -513,6 +520,9 @@ class RecommendationStrategy(AI):
 
 
     def rank_of_second_last_card_played(self):
+        """
+        Renvoie il y a combien de tours l'avant derniere carte a ete jouee (et non jetee). Si il ny en a pas, renvoie -1
+        """
         NumberOfMoves=len(self.game.moves)-1
         i=0
         FirstClue=False
@@ -531,6 +541,9 @@ class RecommendationStrategy(AI):
         
 
     def rank_of_last_clue(self):
+        """
+        Renvoie il y a combien de tours le dernier indice a ete donne. Si il ny en a pas, renvoie -1
+        """  
         NumberOfMoves=len(self.game.moves)-1
         i=0
         while i<=NumberOfMoves:
@@ -539,6 +552,9 @@ class RecommendationStrategy(AI):
             i+=1
         return(-1)    
     def no_card_has_been__played_since_the_last_hint(self):
+        """
+        Cette fonction sert a savoir si une carte a ete jouee depuis le dernier indice donne. Elle renvoie un booleen.
+        """
         if self.rank_of_last_clue()<0:
             return(False)
         if self.rank_of_last_card_played()<0:
@@ -562,18 +578,31 @@ class RecommendationStrategy(AI):
         
     
     def play(self):
+        """
+        L'action est faite selon les 5 priorites :
+            Numero 1 : Si la recommandation est de jouer une carte ET qu'AUCUNE carte n'a ete jouee depuis, jouer la carte
+            recommendee.
+            Numero 2 : Si la recommandation est de jouer une carte ET qu'une carte a ete jouee depuis ET qu'il y a moins de 2
+            jetons rouges,jouer la carte recommendee.
+            Numero 3 : Si il reste des jetons bleus,donner un indice. 
+            Numero 4 : Si la recommandation est de jeter une carte, la jeter.
+            Numero 5 : jeter carte 1. 
+        """
         game = self.game
         print(self.game.memoire)
         if len(self.game.moves)>0:
             recommendation=self.game.memoire[self.current_player_number()]
             print("recomm")
             print(recommendation)
-            if recommendation[0]=='p':     
+            if recommendation[0]=='p': 
+        #CAS NUMERO 1      
                 if self.no_card_has_been__played_since_the_last_hint():
                     return(recommendation)
+        #CAS NUMERO 2
                 if self.one_card_has_been__played_since_the_last_hint():
                     if game.red_coins<2:
                         return(recommendation)
+        #CAS NUMERO 3
         if game.blue_coins>0:
             h=self.give_a_hint()
             c=self.current_player_number()
@@ -587,8 +616,10 @@ class RecommendationStrategy(AI):
         if len(self.game.moves)>0:
             (a,b)=self.the_most_recent_recommendation()
             recommendation=self.deduce_my_moves(a,b)
+        #CAS NUMERO 4 
             if recommendation[0]=='d':
                 return(recommendation)
+        #CAS NUMERO 5
         return('d1')
 
 
@@ -599,7 +630,9 @@ class RecommendationStrategy_3(AI):
         i=len(self.game.moves)
         return(i%5)
     def the_most_recent_recommendation(self):
-        '''retourne l'indice sous forme c... et le numéro du joueur qui l'a donné par rapport au joueur courant'''
+        """
+        retourne l'indice sous forme c... et le numéro du joueur qui l'a donné par rapport au joueur courant
+        """
         NumberOfMoves=len(self.game.moves)-1
         i=0
         while i<=NumberOfMoves:
@@ -738,9 +771,9 @@ class RecommendationStrategy_3(AI):
         return(-1)
         
     def hint_into_number(self,hint,PlayerHowGaveTheHint):
-        '''
+        """
         transforme l'indice en un chiffre de 0 à 7
-        '''
+        """
         tab1=['c11','c12','c13','c14','cr1','cr2','cr3','cr4']
         tab2=['c21','c22','c23','c24','cg1','cg2','cg3','cg4']
         tab3=['c31','c32','c33','c34','cb1','cb2','cb3','cb4']
@@ -786,10 +819,10 @@ class RecommendationStrategy_3(AI):
         
         
     def play(self):
-        '''
-        on a plus desoin des fonctions, rank, laste clue...
+        """
+        on a plus besoin des fonctions, rank, last clue...
         plusieurs joueurs peuvent jouer à la suite des uns des autres
-        '''
+        """
         game = self.game
         print("memoire",self.game.memoire)
         if len(self.game.moves)>0:
