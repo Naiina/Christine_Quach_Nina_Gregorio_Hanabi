@@ -1,23 +1,32 @@
 # IN104 - Rapport du projet Hanabi
 
-Auteurs : https://github.com/Naiina/Christine_Quach_Nina_Gregorio_Hanabi
+Auteurs : Quach Christine - Gregorio Nina
+lien githubb https://github.com/Naiina/Christine_Quach_Nina_Gregorio_Hanabi
 
 ## Stratégie retenue
-- Nous avons tout d'abord choisi de modifier l'IA Cheater en faisant en sorte qu'elle ne triche plus, puis nous avons apporte des ameliorations de strategie. Il a donc fallu modifier.... 
+-Nous avons d'abord créer un alogrithme qui oue de façon aléatoire afin d'apprivoiser le code.
+- Puis nous avons tout d'abord choisi de modifier l'IA Cheater en faisant en sorte qu'elle ne triche plus.
+Puis nous avons apporté des ameliorations de strategie. Il a donc fallu modifier:
 	- les classes playable/discardable/precious/mynotprecious/myprecious pour n'avoir que la liste des cartes que l'on connait.
-	- modification du debut de partie pour jouer les premiers 1 
-	- peut erte rajouter code ici
+	- le debut de partie pour jouer les premiers 1 
+	- jouer uniquement les cartes dont on est 100% surs
 
-- Nous avons ensuite decide d'ameliorer notre IA non-tricheuse avec la strategie de Recommendation. Il a donc fallu ... 
-	- modifier les clsses playable/discardable et precious ? 
-	- peut etre faire une version qui inerprete lindice a son tour et une autre ou lindice est interprete au moment ou il est donne 
+- Nous avons ensuite decidé d'ameliorer notre IA non-tricheuse avec la strategie de Recommendation détaillé dans l'article.
+	
+-Enfin, les indices n'étaient pas exploités au maximum. On a choisi d'indiquer également combien de joueurs peuvent jouer de façon simultanée afin d'obtimiser l'utilisation des indices
 
 
 ## Points techniques
  on pourrait ici parler de :
  	- expliquer le truc des listes et le chiffre direct pour reduire lecriture dans deduce_number et give_a_hint  
  	- le truc de trier les liste ca cest style hahah et tres preatique 
- 	- etc ... 
+-Algo RecommendationStrategy
+ 	- ajout dans deck d'une liste mémoire afin que les joueurs puissent mémoriser au mement où est donné l'indice ce qu'ils doivent faire.
+	- des fonctions qui grâce a sefl.game.moves déduisent quel est le numéro du joueur en cours, combien de cartes ont éte jouées depuis le dernier indice, quel est le dernier indice donné.
+	-des fonctions qui fond les conversions entre les indices en string du type "c1A" les indices en int entre 0 et 7 et ce qu'ils représentent pour le joueur dont c'est le tour en fonction de quand ils ont étés données, afin de ne pas se mélanger dans touuus ces indices différents
+	-un fichier pour lancer le jeu en uneligne de commende au lieu de 4
+-Algo RecommendationStrategy_3
+	-une liste qui tient compte du nombre de joueurs pouvant jouer d'affilé pour optimiser l'algo précédent (nécéssité de modifier la maorité des fonctions en conséquence)
 
 ```python
     def add_blue_coin(self):
