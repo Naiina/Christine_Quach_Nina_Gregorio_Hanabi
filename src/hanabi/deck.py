@@ -78,6 +78,9 @@ class Card:
         """
         return str(self) == str(c)
 
+    def __hash__(self):
+        return hash(str(self))
+
     def str_clue(self):
         "What I know about this card."
         return (self.color_clue or '*') + (self.number_clue or '*')
@@ -228,7 +231,7 @@ class Game:
 
         # record starting deck and moves, for replay
         self.moves = []
-        self.memoire=[-1,-1,-1,-1,-1]
+        self.memoire=["rien","rien","rien","rien","rien"]
         self.starting_deck = copy.deepcopy(self.deck)
 
         self.hands = self.deck.deal(len(self.players))
