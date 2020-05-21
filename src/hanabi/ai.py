@@ -213,12 +213,9 @@ def kown_cards(mycards):
 
 class NotCheater(AI):
     """
-    This player can see his own cards!
-    Algorithm:
-      * if 1-or-more card is playable and kown: play the lowest one, then newest one
-      * if blue_coin<8 and an unnecessary card present: discard it.
-      * if blue_coin>0: give a clue on precious card (so a human can play with a Cheater)
-      * if blue_coin<8: discard the largest one, except if it's the last of its kind or in chop position in his opponent.
+    This player can not see his own cards!
+    it works almost like the cheater one, but plays only wenn he is completly sure of its card.
+    one improvement: if no card is played and he has a one he plays it
     """
 
     def play(self):
@@ -348,22 +345,7 @@ class NotCheater(AI):
 
 
 class RecommendationStrategy(AI): 
-    #Doc: 
-    # no_card_has_been__played_since_the_last_hint 
-    #           return bool
-    # one_card_has_been__played_since_the_last_hint
-    #     deduce_my_move(hint, PlayerHowGaveTheHint)
-    #           return string hint
-    #     deduce_number(player number)  Christine: a un instant donné, determine la 'hatColor' du joueur i
-    #           takes a string hint, return a string hint
-    #     the_most_recent_recommendation()
-    #       return p/d  1 2 3 4, ex:('p2',playernumer) 
-    #     give_a_hint  Christine
-    #     hint_into_number
-    #     number_into_hint
-    #     rank_of_last_card_played()   return int -1 if no last card played
-    #     rank_of_second_last_card_played()    return int -1 if no last card played
-    #     ran_of_the_last_clue
+
          
     def deduce_number(self,hand):
         """ 
@@ -494,6 +476,9 @@ class RecommendationStrategy(AI):
 
   
     def deduce_my_moves(self,hint,PlayerHowGaveTheHint):
+        '''
+        a partir du numéro qu'elle reçoit cette fonction renvoie ce que le joueur doit jouer
+        '''
         game=self.game
         sum=self.hint_into_number(hint,PlayerHowGaveTheHint)
         k=0
@@ -605,6 +590,10 @@ class RecommendationStrategy(AI):
             if recommendation[0]=='d':
                 return(recommendation)
         return('d1')
+
+
+
+
 class RecommendationStrategy_3(AI):
     def current_player_number(self):
         i=len(self.game.moves)
@@ -622,8 +611,7 @@ class RecommendationStrategy_3(AI):
 
     def deduce_number_2(self,hand):
         """ 
-    Cette fonction donne une recommendation de type liste (ex : R=["p",1]) pour seule main. Mais ici on prend p=-1 et d=3
-    pour que la fonction renvoie R[0]+R[1] qui se trouve entre 0 et 7. 
+    Cette fonction donne un coulpe: une recommendation de type liste (ex : R=["p",1]) pour seule main et une carte si la recommendation consiste a jouer une carte, "rien" sinon
 
     On definit 3 types de cartes : 
         - playable : celles que l'on peut mettre sur une les piles 
@@ -703,7 +691,7 @@ class RecommendationStrategy_3(AI):
         """
         On fait la somme des recommendations (en chiffre) pour chaque main, modulo 7, appele hint. 
         Puis, a ce chiffre hint, on associe la liste A=[rang ou couleur, numero joueur]. 
-        Enfin, on donne l'indice.
+        on regarde de plus si, je joueur 1 pouvant jouer, le joueur deux le peut aussi, puis le joueur 3...
         """
         game=self.game
 
@@ -750,6 +738,9 @@ class RecommendationStrategy_3(AI):
         return(-1)
         
     def hint_into_number(self,hint,PlayerHowGaveTheHint):
+        '''
+        transforme l'indice en un chiffre de 0 à 7
+        '''
         tab1=['c11','c12','c13','c14','cr1','cr2','cr3','cr4']
         tab2=['c21','c22','c23','c24','cg1','cg2','cg3','cg4']
         tab3=['c31','c32','c33','c34','cb1','cb2','cb3','cb4']
@@ -795,6 +786,10 @@ class RecommendationStrategy_3(AI):
         
         
     def play(self):
+        '''
+        on a plus desoin des fonctions, rank, laste clue...
+        plusieurs joueurs peuvent jouer à la suite des uns des autres
+        '''
         game = self.game
         print("memoire",self.game.memoire)
         if len(self.game.moves)>0:
@@ -821,36 +816,3 @@ class RecommendationStrategy_3(AI):
                 return(recommendation)
         return('d1')
 
-class RecommendationStrategy_2(AI): 
-    def playable_cards(self,l,hand):
-        game=self.game
-        playble1 = [ card for card in hand.cards if game.piles[card.color]+1 == card.number ]
-        lbis=copy.deepcopy(l)
-        if len(lbis)!=0:
-            for card in lbis:
-                card[1].number+=1
-        playable2 = [ card for card in hand.cards if card in lbis ]
-        return(set(playable2+playble1))
-
-
-    def best_hint_list(self):
-        game=self.game
-        l=[[6-card.number,card] for card in self.playable_cards([],self.other_hands[0])]
-        
-        for player in range(1,4):
-                for lists in l:
-                    print(l)
-                    for card in self.playable_cards(l,self.other_hands[player]):
-                        print("list",lists)
-                        l.remove(lists)
-                        print("lists before",lists)
-                        lists.append((card,player))
-                        lists[0]+=6-card.number
-                        l.append(lists)
-                        
-                        print("lists after",l)
-                        
-        print(l)
-        return(l)
-            
-    
