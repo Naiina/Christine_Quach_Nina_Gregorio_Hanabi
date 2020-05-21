@@ -367,14 +367,14 @@ class RecommendationStrategy(AI):
          
     def deduce_number(self,hand):
         """ 
-    Cette fonction donne une recommendation de type liste (ex : R=["p",1]) pour seule main. Mais ici on prend p=-1 et d=3
-    pour que la fonction renvoie R[0]+R[1] qui se trouve entre 0 et 7. 
+        Cette fonction donne une recommendation de type liste (ex : R=["p",1]) pour seule main. Mais ici on prend p=-1 et d=3
+        pour que la fonction renvoie R[0]+R[1] qui se trouve entre 0 et 7. 
 
-    On definit 3 types de cartes : 
-        - playable : celles que l'on peut mettre sur une les piles 
-        - dead : les cartes qui sont deja dans les piles (deja jouees)
-        - indispensable : les cartes dont il ne reste qu'un exemplaire (pas encore joue)
-    """
+        On definit 3 types de cartes : 
+            - playable : celles que l'on peut mettre sur une les piles 
+            - dead : les cartes qui sont deja dans les piles (deja jouees)
+            - indispensable : les cartes dont il ne reste qu'un exemplaire (pas encore joue)
+        """
         game=self.game
 
         playable = [ (i+1, card.number) for (i, card) in
@@ -391,16 +391,16 @@ class RecommendationStrategy(AI):
                          == game.deck.card_count[card.number]
                         ]
         """
-    La recommendation est faite selon les 5 priorites :
-        Numero 1 : Si dans la liste playable et non vide il y en a une de rang 5 on la joue, si il y en a plusieur on joue 
-        la plus petite d'indice.
-        Numero 2 : Si la liste playable est non vide : jouer celle de rang le plus petit, si il y en a plusieurs, on joue la
-        plus petite d'indice.
-        Numero 3 : Si liste dead est non vide : jeter celle d'indice (dans la main) la plus petite. 
-        Numero 4 : Si dead est vide, jeter carte de rang LE PLUS GRAND, PAS dans indispensable. Si il y en a plusieurs, on joue
-        la plus petite d'indice.
-        Numero 5 : jeter carte 1. 
-    """
+        La recommendation est faite selon les 5 priorites :
+            Numero 1 : Si dans la liste playable et non vide il y en a une de rang 5 on la joue, si il y en a plusieur on joue 
+            la plus petite d'indice.
+            Numero 2 : Si la liste playable est non vide : jouer celle de rang le plus petit, si il y en a plusieurs, on joue la
+            plus petite d'indice.
+            Numero 3 : Si liste dead est non vide : jeter celle d'indice (dans la main) la plus petite. 
+            Numero 4 : Si dead est vide, jeter carte de rang LE PLUS GRAND, PAS dans indispensable. Si il y en a plusieurs, on joue
+            la plus petite d'indice.
+            Numero 5 : jeter carte 1. 
+        """
 
         R=[0,0]
 
@@ -451,9 +451,9 @@ class RecommendationStrategy(AI):
 
     def give_a_hint(self):
         """
-        On fait la somme des recommendations (en chiffre) pour chaque main, modulo 7, appele hint. 
-        Puis, a ce chiffre hint, on associe la liste A=[rang ou couleur, numero joueur]. 
-        Enfin, on donne l'indice.
+        On fait la somme des recommendations (en chiffre) pour chaque main, modulo 8, appele hint. 
+        Puis, a ce chiffre hint, on associe la chaine de caractere "c"+"indice type rang ou couleur" + "numero du joueur" 
+        Enfin, on renvoie l'indice qui est une chaine de caractere.
         """
         game=self.game
 
@@ -469,6 +469,9 @@ class RecommendationStrategy(AI):
         #ou direct hanabi.deck.Game.clue(game,A) c'est comme tu veux haha 
 
     def hint_into_number(self,hint,PlayerHowGaveTheHint):
+        """
+        Cette fonction transforme un indice(type action clue) de type chaine de caractere en un entier compris entre 0 et 7
+        """
         tab=['c11','c12','c13','c14','cr1','cr2','cr3','cr4']
         i=0
         for h in tab:
@@ -480,6 +483,10 @@ class RecommendationStrategy(AI):
 
 
     def number_into_hint(self,number):
+        """
+        Cette fonction transforme un chiffre compris entre 0 et 7 en un indice d'ACTION, i.e. une chaine 
+        de caractere "p ou d"+"numero de carte a jouer"
+        """
         tab=['p1','p2','p3','p4','d1','d2','d3','d4']
         return(tab[number])
 
