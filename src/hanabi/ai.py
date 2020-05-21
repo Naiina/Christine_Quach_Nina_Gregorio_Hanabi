@@ -816,3 +816,263 @@ class RecommendationStrategy_3(AI):
                 return(recommendation)
         return('d1')
 
+
+
+class RecommendationStrategy_4(AI):
+    def current_player_number(self):
+        i=len(self.game.moves)
+        return(i%5)
+    def the_most_recent_recommendation(self):
+        '''retourne l'indice sous forme c... et le numéro du joueur qui l'a donné par rapport au joueur courant'''
+        NumberOfMoves=len(self.game.moves)-1
+        i=0
+        while i<=NumberOfMoves:
+            if self.game.moves[NumberOfMoves-i][0]=='c':
+                if (i+1)%5!=0:
+                    return((self.game.moves[NumberOfMoves-i],5-(i+1)%5)) 
+            i+=1
+        return(('no recommendation',-1))
+
+    def deduce_number_2(self,hand):
+        """ 
+    Cette fonction donne un coulpe: une recommendation de type liste (ex : R=["p",1]) pour seule main et une carte si la recommendation consiste a jouer une carte, "rien" sinon
+
+    On definit 3 types de cartes : 
+        - playable : celles que l'on peut mettre sur une les piles 
+        - dead : les cartes qui sont deja dans les piles (deja jouees)
+        - indispensable : les cartes dont il ne reste qu'un exemplaire (pas encore joue)
+    """
+        game=self.game
+
+        playable = [ (i+1, card.number,card) for (i, card) in
+                    enumerate(hand.cards)
+                    if game.piles[card.color]+1 == card.number]
+
+        dead = [ i+1 for (i, card) in
+                enumerate(hand.cards)
+                if ( card.number <= game.piles[card.color])]
+
+        indispensable = [ card for card in
+                     hand.cards
+                     if (1+game.discard_pile.cards.count(card))
+                         == game.deck.card_count[card.number]
+                        ]
+        """
+    La recommendation est faite selon les 5 priorites :
+        Numero 1 : Si dans la liste playable et non vide il y en a une de rang 5 on la joue, si il y en a plusieur on joue 
+        la plus petite d'indice.
+        Numero 2 : Si la liste playable est non vide : jouer celle de rang le plus petit, si il y en a plusieurs, on joue la
+        plus petite d'indice.
+        Numero 3 : Si liste dead est non vide : jeter celle d'indice (dans la main) la plus petite. 
+        Numero 4 : Si dead est vide, jeter carte de rang LE PLUS GRAND, PAS dans indispensable. Si il y en a plusieurs, on joue
+        la plus petite d'indice.
+        Numero 5 : jeter carte 1. 
+    """
+
+        R=[0,0]
+
+        if playable: 
+            R[0]=(-1)
+
+        #CAS NUMERO 1 
+            #on trie les cartes par ordre decroissant de rang, et par anciennete les plus anciennes avant
+            playable.sort(key=lambda p: (-p[1],p[0]))
+            if playable[0][1]==5 :
+                R[1]=playable[0][0]
+                return (R[0]+R[1],playable[0][2])
+
+        #CAS NUMERO 2 
+            #on trie les cartes par ordre croissant de rang et par anciennete les plus anciennes avant
+            playable.sort(key=lambda p: (p[1],p[0]))
+            R[1]=playable[0][0]
+            return (R[0]+R[1],playable[0][2])
+
+        #CAS NUMERO 3 
+        if dead : 
+            dead.sort()
+            R=[3,dead[0]]
+
+            return ((R[0]+R[1],None))
+
+        #CAS NUMERO 4
+        if indispensable : 
+            intersection=[ (i+1, card.number) for (i, card) in
+                    enumerate(hand.cards)
+                    if (card not in indispensable)]
+
+            if intersection : 
+                intersection.sort(key=lambda p: (-p[1],p[0]))
+                R[0]=3
+                R[1]=intersection[0][0]
+
+                return (R[0]+R[1],None)
+
+        #CAS NUMERO 5
+        R=[3,1]
+
+        return(R[0]+R[1],None) 
+    def give_a_hint_2(self):
+        """
+        On fait la somme des recommendations (en chiffre) pour chaque main, modulo 7, appele hint. 
+        Puis, a ce chiffre hint, on associe la liste A=[rang ou couleur, numero joueur]. 
+        on regarde de plus si, je joueur 1 pouvant jouer, le joueur deux le peut aussi, puis le joueur 3...
+        """
+        game=self.game
+
+        s=0
+        tab=[]
+        for hand in self.other_hands :
+            number, card=self.deduce_number_2(hand)
+            tab.append(card)
+            s=s+number
+        print("tab",tab)
+        h=4
+        if tab[0]==tab[1] and tab[0]!=None:
+            h=1
+        else:
+            if tab[1]==tab[2] or tab[0]==tab[2]:
+                if tab[2]!=None:
+                    h=2
+            else:
+                if tab[3]==tab[2] or tab[3]==tab[1] or tab[3]==tab[0]:
+                    if tab[3]!=None:
+                        h=3
+        hint=s%8
+        color=['r','g','b','w']
+        IND=[['c11','c12','c13','c14','cr1','cr2','cr3','cr4'],['c21','c22','c23','c24','cg1','cg2','cg3','cg4'],['c31','c32','c33','c34','cb1','cb2','cb3','cb4'],['c41','c42','c43','c44','cw1','cw2','cw3','cw4']]
+        A=IND[h-1][hint]
+        return A 
+    def new_hint(self,hint):
+        if hint[1]=='r':
+            return(1)
+        if hint[1]=='g':
+            return(2)
+        if hint[1]=='b':
+            return(3)
+        if hint[1]=='w':
+            return(4)
+        if hint[1]=='1':
+            return(1)
+        if hint[1]=='2':
+            return(2)
+        if hint[1]=='3':
+            return(3)
+        if hint[1]=='4':
+            return(4)
+        return(-1)
+        
+    def hint_into_number(self,hint,PlayerHowGaveTheHint):
+        '''
+        transforme l'indice en un chiffre de 0 à 7
+        '''
+        tab1=['c11','c12','c13','c14','cr1','cr2','cr3','cr4']
+        tab2=['c21','c22','c23','c24','cg1','cg2','cg3','cg4']
+        tab3=['c31','c32','c33','c34','cb1','cb2','cb3','cb4']
+        tab4=['c41','c42','c43','c44','cw1','cw2','cw3','cw4']
+        i=0
+        for h in tab1:
+            if hint==h:
+                return(i)
+            i+=1
+        for h in tab2:
+            if hint==h:
+                return(i)
+            i+=1
+        for h in tab3:
+            if hint==h:
+                return(i)
+            i+=1
+        for h in tab4:
+            if hint==h:
+                return(i)
+            i+=1
+        return(-1)
+
+
+
+    def number_into_hint(self,number):
+        tab=['p1','p2','p3','p4','d1','d2','d3','d4']
+        return(tab[number])
+
+
+
+  
+    def deduce_my_moves(self,hint,PlayerHowGaveTheHint):
+        game=self.game
+        sum=self.hint_into_number(hint,PlayerHowGaveTheHint)
+        k=0
+        for hand in self.other_hands:
+            k+=1
+            if k!=PlayerHowGaveTheHint:
+                    sum+=-self.deduce_number_2(hand)[0]
+        sum=sum%8
+        return(self.number_into_hint(sum))
+        
+        
+    def play(self):
+        '''
+        on a plus desoin des fonctions, rank, laste clue...
+        plusieurs joueurs peuvent jouer à la suite des uns des autres
+        '''
+        game = self.game
+        print("memoire",self.game.memoire)
+        if len(self.game.moves)>0:
+            recommendation=self.game.memoire[self.current_player_number()]
+            if recommendation[0]=='p':
+                        return(recommendation)
+        print("score",self.game.score)
+        if self.game.score<12:
+            if game.blue_coins>2:
+                h=self.give_a_hint_2()
+                print("hint given",h)
+                c=self.current_player_number()
+                g=self.new_hint(h)
+                print("g",g)
+                for i in range(0,5):
+                    if i!=c:
+                        self.game.memoire[i]=self.deduce_my_moves(h,(i-c)%5)
+                for j in range(4-g):
+                    self.game.memoire[(c+j+g+1)%5]="rien"
+                print(self.game.memoire)
+                return(h)
+
+            if len(self.game.moves)>0:
+                (a,b)=self.the_most_recent_recommendation()
+                recommendation=self.deduce_my_moves(a,b)
+                if recommendation[0]=='d':
+                    return(recommendation)
+            if game.blue_coins>0:
+                h=self.give_a_hint_2()
+                print("hint given",h)
+                c=self.current_player_number()
+                g=self.new_hint(h)
+                print("g",g)
+                for i in range(0,5):
+                    if i!=c:
+                        self.game.memoire[i]=self.deduce_my_moves(h,(i-c)%5)
+                for j in range(4-g):
+                    self.game.memoire[(c+j+g+1)%5]="rien"
+                print(self.game.memoire)
+                return(h)
+            return('d1')
+        else:
+            if game.blue_coins>0:
+                h=self.give_a_hint_2()
+                print("hint given",h)
+                c=self.current_player_number()
+                g=self.new_hint(h)
+                print("g",g)
+                for i in range(0,5):
+                    if i!=c:
+                        self.game.memoire[i]=self.deduce_my_moves(h,(i-c)%5)
+                for j in range(4-g):
+                    self.game.memoire[(c+j+g+1)%5]="rien"
+                print(self.game.memoire)
+                return(h)
+
+            if len(self.game.moves)>0:
+                (a,b)=self.the_most_recent_recommendation()
+                recommendation=self.deduce_my_moves(a,b)
+                if recommendation[0]=='d':
+                    return(recommendation)
+            return('d1')
