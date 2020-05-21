@@ -165,17 +165,49 @@ class AiTest(unittest.TestCase):
 
     def test_deduce_number_1(self):
     	game = hanabi.Game(5)
+        ai=hanabi.ai.RecommendationStrategy(game)
         c1 = hanabi.deck.Card(hanabi.deck.Color.Blue,5)
         c2 = hanabi.deck.Card(hanabi.deck.Color.Red,2)
         c3 = hanabi.deck.Card(hanabi.deck.Color.Green,4)
         c4 = hanabi.deck.Card(hanabi.deck.Color.Blue,2)
-        c5 = hanabi.deck.Card(hanabi.deck.Color.Yellow,2)
-        hand=hanabi.deck.Hand([c1,c2,c3,c4,c5])   
+        hand=hanabi.deck.Hand([c1,c2,c3,c4])   
         game.piles[hanabi.deck.Color.Blue]=4
         game.piles[hanabi.deck.Color.Red]=1
         game.piles[hanabi.deck.Color.Green]=3
         game.piles[hanabi.deck.Color.Yellow]=1
-        self.assertEqual(hanabi.ai.RecommendationStrategy.deduce_number(self,hand), 0)
+        self.assertEqual(hanabi.ai.RecommendationStrategy.deduce_number(ai,hand), 0)
+
+
+    def test_deduce_number_2(self):
+        game = hanabi.Game(5)
+        ai=hanabi.ai.RecommendationStrategy(game)
+        c1 = hanabi.deck.Card(hanabi.deck.Color.Blue,1)
+        c2 = hanabi.deck.Card(hanabi.deck.Color.Red,1)
+        c3 = hanabi.deck.Card(hanabi.deck.Color.Green,1)
+        c4 = hanabi.deck.Card(hanabi.deck.Color.Yellow,1)
+        hand=hanabi.deck.Hand([c1,c2,c3,c4])   
+        game.piles[hanabi.deck.Color.Blue]=2
+        game.piles[hanabi.deck.Color.Red]=2
+        game.piles[hanabi.deck.Color.Green]=2
+        game.piles[hanabi.deck.Color.Yellow]=2
+        self.assertEqual(hanabi.ai.RecommendationStrategy.deduce_number(ai,hand), 5)
+
+    def test_give_a_hint(self):
+        game = hanabi.Game(5)
+        ai=hanabi.ai.RecommendationStrategy(game)
+        c1 = hanabi.deck.Card(hanabi.deck.Color.Blue,5)
+        c2 = hanabi.deck.Card(hanabi.deck.Color.Red,1)
+        c3 = hanabi.deck.Card(hanabi.deck.Color.Green,1)
+        c4 = hanabi.deck.Card(hanabi.deck.Color.Yellow,1)
+        c5 = hanabi.deck.Card(hanabi.deck.Color.Red,5)
+        c6 = hanabi.deck.Card(hanabi.deck.Color.Green,5)
+        c7 = hanabi.deck.Card(hanabi.deck.Color.Yellow,5)
+        hand1=hanabi.deck.Hand([c1,c2,c3,c4]) 
+        hand2=hanabi.deck.Hand([c5,c2,c3,c4]) 
+        hand3=hanabi.deck.Hand([c6,c2,c3,c4])
+        hand4=hanabi.deck.Hand([c2,c7,c3,c4])
+        game.other_hands=[hand1,hand2,hand3,hand4]
+        self.assertEqual(hanabi.ai.RecommendationStrategy.give_a_hint(ai), 1)
 
 
 
