@@ -50,6 +50,7 @@ Pour convertir un indice d'action en un chiffre, nous avons utilise le tableau s
 | d2 | 5 | 3 | 2 |
 | d3 | 6 | 3 | 3 |
 | d4 | 7 | 3 | 4 |
+
 On associe l'action 'p' au chiffre 0 et 'd' a 3. 
 
 On utilise l'indice de type int pour chercher directement son equivalent en chaine de caractere dans la liste.
