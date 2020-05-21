@@ -1,24 +1,35 @@
 # IN104 - Rapport du projet Hanabi
 
-Auteurs : https://github.com/Naiina/Christine_Quach_Nina_Gregorio_Hanabi
+-Auteurs : Quach Christine - Gregorio Nina    
+-lien githubb https://github.com/Naiina/Christine_Quach_Nina_Gregorio_Hanabi
 
 ## Stratégie retenue
-- Nous avons tout d'abord choisi de modifier l'IA Cheater en faisant en sorte qu'elle ne triche plus, puis nous avons apporte des ameliorations de strategie. Il a donc fallu modifier.... 
+-Nous avons d'abord créer un alogrithme qui joue de façon aléatoire afin d'apprivoiser le code.
+- Puis nous avons tout d'abord choisi de modifier l'IA Cheater en faisant en sorte qu'elle ne triche plus.
+Puis nous avons apporté des ameliorations de strategie. Il a donc fallu modifier:
 	- les classes playable/discardable/precious/mynotprecious/myprecious pour n'avoir que la liste des cartes que l'on connait.
-	- modification du debut de partie pour jouer les premiers 1 
-	- peut erte rajouter code ici
+	- le debut de partie pour jouer les premiers 1 
+	- jouer uniquement les cartes dont on est 100% surs
 
-- Nous avons ensuite decide d'ameliorer notre IA non-tricheuse avec la strategie de Recommendation. Il a donc fallu ... 
-	- modifier les clsses playable/discardable et precious ? 
-	- peut etre faire une version qui inerprete lindice a son tour et une autre ou lindice est interprete au moment ou il est donne 
+- Nous avons ensuite decidé d'ameliorer notre IA non-tricheuse avec la strategie de Recommendation détaillé dans l'article.
+	
+-Les indices n'étaient pas exploités au maximum. On a choisi d'indiquer également combien de joueurs peuvent jouer de façon simultanée afin d'obtimiser l'utilisation des indices
+-Enfin, en début de partie afin de pousser les joueurs qui peuvent le faire à jetter lorsqu'il n'y a plus beaucoup d'indices on divise le jeux en deux phases: dans la première s'il ne reste que deux jetons et qu'un joueur peut discard il le fait au lieu de donner un indice. Dans la deuxième il donne préférentiellement un indice.
 
 
 ## Points techniques
  on pourrait ici parler de :
  	- expliquer le truc des listes et le chiffre direct pour reduire lecriture dans deduce_number et give_a_hint  
  	- le truc de trier les liste ca cest style hahah et tres preatique 
- 	- etc ... 
+-Algo RecommendationStrategy
+ 	- ajout dans deck d'une liste mémoire afin que les joueurs puissent mémoriser au moment où est donné l'indice ce qu'ils doivent faire.
+	- utilisation de sefl.game.moves pour déduir quel est le numéro du joueur en cours, combien de cartes ont éte jouées depuis le dernier indice, quel est le dernier indice donné.
+	-des fonctions qui fond les conversions entre les indices en string du type "c1A" les indices en int entre 0 et 7 et ce qu'ils représentent pour le joueur dont c'est le tour en fonction de quand ils ont étés données, afin de ne pas se mélanger dans touuus ces indices différents
+	-un fichier pour lancer le jeu en uneligne de commende au lieu de 4
+-Algo RecommendationStrategy_3
+	-une liste qui tient compte du nombre de joueurs pouvant jouer d'affilé pour optimiser l'algo précédent (nécéssité de modifier la maorité des fonctions en conséquence)
 
+	
 ```python
     def add_blue_coin(self):
         if self.blue_coins == 8:
@@ -43,36 +54,46 @@ Exemple :
 
 ## Tests en série - statistiques - analyse des résultats
 
+Le script `plot_games.py` lance les AI 10000 fois.
 
-### AI NotCheater
-1)Faire tourner les not cheater et voir auil joue pas de ouf bien 
-2)Mettre image
-3)Suggestions de pourauoi il ne marche pas bien 
-
-Le script `son_nom.py` lance l'AI 10000 fois.
-
-Le score moyen obtenu est [...] ; pour comparaison le Cheater de l'article fait en moyenne 24.87.
-
-Voici l'histogramme de nos résultats :
-![Histogramme de l'AI Cheater](images/mon_histogramme.png)
-
-à comparer avec celui (c) de l'article :
-![Les 3 histogrammes de l'article](images/histogrames_hatstrat.png)
+ ### Random and NotCheater AI
 
 
 
-Important : pensez à analyser et discuter les différences entre vos résultats et l'article.
-En particulier, si vous faites mieux ou moins bien, quelles en sont les raisons, et des pistes d'amélioration.
-Les parties qui finissent à moins de 25 points sont aussi intéressantes à analyser.
 
 
-### AI RecommendationStrategy en sauvegardant les indices apres
-1) faire pareil ici 
 
-### AI RecommendationStrategy en sauvegardant les indices avant 
-1)pareeeil 
+![Histogramme de l'AI NotCheater](images/NotCheater_10000.png)
+
+
+![Les 3 histogrammes de l'AI Random](images/Random_10000.png)
+Le score moyen obtenu est de 1.97 pour le NotCheater et de 1.26 pour le Random ce qui est evidament peu satisfaisant. L'algorithme NotCheater dans des indices sans forcément tenter de compltéter des demi-indices ce qui explique que peu de joueurs ont assez d'informations pour poser une carte. Il consomme de plus beaucoup d'indices ce qui oblige les joueurs a jetter souvent; Jettant à l'aveugle le jeu est rapidement bolqué. 
+
+### AI RecommendationStrategy 
+
+![Histogramme de l'AI RecommendationStrategy](images/RecommendationStrategy_10000.png)
+Le score moyen est de 21.20, ce qui est étonnant car l'article atteind 23. Il nous semble pourtant avoir suivi les instruction précises du document. 
+
+### AI RecommendationStrategy avec indices optimisés
+![Histogramme de l'AI RecommendationStrategy_3](images/RecommendationStrategy_3)
+Le score moyen est de 23.17, ce qui est un peu suppérieur à l'article. Pourtant certains jeux se terminent avec un score iférieur à 15 ce qui n'était pas observé pour l'algo précédent. Certaines cartes sont certainement jetée de façon non optimales et bloquent le jeu. 
+
+
+### AI RecommendationStrategy avec indices optimisés version 2
+![Histogramme de l'AI RecommendationStrategy_4](images/RecommendationStrategy_4.py)
+Le score moyen est de 23.45. On a réduit les très mauvais résultats. Il faudrait optimiser le réglage des paramètres, voir faire trois phases.
 
 ## Conclusion et perspectives
 
 Parce qu'il est toujours bon d'aider son lecteur à retenir les points importants,
-et lui donner des nouvelles pistes de réflexion.
+et lui donner des nouvelles pistes de réflexion.    
+
+Il serait intéréssant de pouvoir indicer au joueurs suivant le premier joueur qui pose une carte, de jouer par dessus celle ci si cela est possible, sans avoir besoin d'un indice suplémentaire.    
+Par exemple:    
+Benji: B1 W5 ...    
+Clara: B1 B2 ...    
+si benji pose son B1 clara aurait intérêt a poser le B2 et non le B1 qui est pourtant indicé d'après l'ordre des priorités actelles. Avec les indices 5 restant on pourrait peut-etre indiquer aux joueurs qui peuvent jouer s'ils doivent prendre en compte leur première ou leur deuxième carte par ordre de priorité
+En poussant le raisonnement plus loin on pourrait essayer d'optimiser chaque indice afin qu'il permette au plus de joueurs de jouer d'affilé. par exemple:   
+Alice: B1 R1    
+Benji: R2..    
+on indicerait plutôt a alice de jouer son R1 qui son B1, ie elle jouerait sa carte de priorité 2 et benji la première.
