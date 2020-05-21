@@ -80,7 +80,7 @@ Le score moyen est de 23.17, ce qui est un peu suppérieur à l'article. Pourtan
 
 
 ### AI RecommendationStrategy avec indices optimisés version 2
-![Histogramme de l'AI RecommendationStrategy_4](src/hanabi/RecommendationStrategy_4.py)
+![Histogramme de l'AI RecommendationStrategy_4](src/hanabi/RecommendationStrategy_4.png)
 Le score moyen est de 23.45. On a réduit les très mauvais résultats. Il faudrait optimiser le réglage des paramètres, voir faire trois phases.
 
 ## Conclusion et perspectives
