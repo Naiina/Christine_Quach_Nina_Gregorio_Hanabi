@@ -42,16 +42,32 @@ Pour recommander les cartes par priorite d'anciennete ou de rang on utilise la s
 Pour convertir un indice d'action en un chiffre, nous avons utilise le tableau suivant : 
 | action | indice_chiffre |  p/d | carte |
 | - | - | - | - |
-| p1 | 0 | 0 | 1 |
-| p2 | 1 | 0 | 2 |
-| p3 | 2 | 0 | 3 |
-| p4 | 3 | 0 | 4 |
+| p1 | 0 | -1 | 1 |
+| p2 | 1 | -1 | 2 |
+| p3 | 2 | -1 | 3 |
+| p4 | 3 | -1 | 4 |
 | d1 | 4 | 3 | 1 |
 | d2 | 5 | 3 | 2 |
 | d3 | 6 | 3 | 3 |
 | d4 | 7 | 3 | 4 |
 
 On associe l'action 'p' au chiffre 0 et 'd' a 3. 
+```python
+    #Numero 1 : Si dans la liste playable et non vide il y en a une de rang 5 on la joue, si il y en a plusieur on joue 
+            #la plus petite d'indice.
+    R=[0,0]
+
+        if playable: 
+            R[0]=(-1)
+
+        #CAS NUMERO 1 
+            #on trie les cartes par ordre decroissant de rang, et par anciennete les plus anciennes avant
+            playable.sort(key=lambda p: (-p[1],p[0]))
+            if playable[0][1]==5 :
+                R[1]=playable[0][0]
+                print (R[0]+R[1])
+                return (R[0]+R[1])        
+```
 
 On utilise l'indice de type int pour chercher directement son equivalent en chaine de caractere dans la liste.
 ```python
@@ -178,40 +194,60 @@ Voici la configuration dans laquelle on se place pour realiser ce test :
 
 ### Test unitaire : play 
 On verifie que si une carte a deja ete jouee depuis que le dernier indice a ete donne et qu'il y a deja 2 jetons rouge, l'IA choisit l'action de donner un indice. On verifie egalement qu'elle donne le bon indice. 
+Voici la configuration dans laquelle on se place pour realiser ce test : 
+![Configuration de jeu, test 3](src/hanabi/test3.png)
 ```python
 	def test_play(self):
-    	game = hanabi.Game(5)
+        game = hanabi.Game(5)
         RS=hanabi.ai.RecommendationStrategy(game)
 
-        c1 = hanabi.deck.Card(hanabi.deck.Color.Blue,1)
-        c2 = hanabi.deck.Card(hanabi.deck.Color.Red,2)
-        c3 = hanabi.deck.Card(hanabi.deck.Color.Green,1)
-        c4 = hanabi.deck.Card(hanabi.deck.Color.Yellow,1)
-        c5 = hanabi.deck.Card(hanabi.deck.Color.Blue,3)
-        c6 = hanabi.deck.Card(hanabi.deck.Color.Green,3)
-        c7 = hanabi.deck.Card(hanabi.deck.Color.Yellow,3)
+        c1 = hanabi.deck.Card(hanabi.deck.Color.Green,1)
+        c2 = hanabi.deck.Card(hanabi.deck.Color.Blue,4)
+        c3 = hanabi.deck.Card(hanabi.deck.Color.Green,4)
+        c4 = hanabi.deck.Card(hanabi.deck.Color.Red,4)
+
+        c5 = hanabi.deck.Card(hanabi.deck.Color.Red,1)
+        c6 = hanabi.deck.Card(hanabi.deck.Color.Green,5)
+        c7 = hanabi.deck.Card(hanabi.deck.Color.Blue,5)
+        c8 = hanabi.deck.Card(hanabi.deck.Color.Red,5)
+
+        c9 = hanabi.deck.Card(hanabi.deck.Color.Yellow,1)
+        c10 = hanabi.deck.Card(hanabi.deck.Color.Yellow,4)
+        c11 = hanabi.deck.Card(hanabi.deck.Color.Blue,4)
+        c12 = hanabi.deck.Card(hanabi.deck.Color.Red,4)
+
+        c13 = hanabi.deck.Card(hanabi.deck.Color.Blue,1)
+        c14 = hanabi.deck.Card(hanabi.deck.Color.Red,3)
+        c15 = hanabi.deck.Card(hanabi.deck.Color.Red,3)
+        c16 = hanabi.deck.Card(hanabi.deck.Color.Green,4)
+
+        c17 = hanabi.deck.Card(hanabi.deck.Color.Yellow,4)
+        c18 = hanabi.deck.Card(hanabi.deck.Color.Green,3)
+        c19 = hanabi.deck.Card(hanabi.deck.Color.Red,1)
+        c20 = hanabi.deck.Card(hanabi.deck.Color.Yellow,3)
+
         game.piles[hanabi.deck.Color.Blue]=0
         game.piles[hanabi.deck.Color.Red]=1
         game.piles[hanabi.deck.Color.Green]=0
         game.piles[hanabi.deck.Color.Yellow]=0
-        ok1=hanabi.deck.Deck([c5,c2,c6,c7]) 
+
+        ok1=hanabi.deck.Deck([c1,c2,c3,c4]) 
         hand1 = hanabi.deck.Hand(ok1, 4)
-        ok2=hanabi.deck.Deck([c5,c6,c1,c7])
+        ok2=hanabi.deck.Deck([c5,c6,c7,c8])
         hand2 = hanabi.deck.Hand(ok2, 4) 
-        ok3=hanabi.deck.Deck([c1,c7,c5,c6])
+        ok3=hanabi.deck.Deck([c9,c10,c11,c12])
         hand3 = hanabi.deck.Hand(ok3, 4)
-        ok4=hanabi.deck.Deck([c4,c6,c5,c7])
+        ok4=hanabi.deck.Deck([c13,c14,c15,c16])
         hand4 = hanabi.deck.Hand(ok4, 4)
 
         game.red_coins=2
         game.blue_coins=5
 
-        game.moves=['cr4','p2']
-        game.memoire=[-1,'p2','p3','p1','d1']
+        game.moves=['c13','p1']
+        game.memoire=[-1,'p1','p3','p1','p1']
 
         hanabi.ai.RecommendationStrategy.other_hands=[hand1,hand2,hand3,hand4]
-        self.assertEqual(hanabi.ai.RecommendationStrategy.play(RS), 'c14')
-
+        self.assertEqual(hanabi.ai.RecommendationStrategy.play(RS), 'cr1')
 ```
 
 
