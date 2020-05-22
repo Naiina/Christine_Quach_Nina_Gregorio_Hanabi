@@ -70,6 +70,17 @@ On associe l'action 'p' au chiffre 0 et 'd' a 3.
 ```
 
 On utilise l'indice de type int pour chercher directement son equivalent en chaine de caractere dans la liste.
+| hint | indice a donner |
+| - | - |
+| 0 | c11 |
+| 1 | c12 |
+| 2 | c13 |
+| 3 | c14 |
+| 4 | cr1 |
+| 5 | cr2 |
+| 6 | cr3 |
+| 7 | cr4 |
+
 ```python
     IND=['c11','c12','c13','c14','cr1','cr2','cr3','cr4']
         A=IND[hint]
