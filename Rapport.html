@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="./doc/github-pandoc.css" type="text/css" />
+</head>
+<body>
+<div id="TOC">
+<ul>
+<li><a href="#in104---rapport-du-projet-hanabi">IN104 - Rapport du projet Hanabi</a><ul>
+<li><a href="#stratégie-retenue">Stratégie retenue</a><ul>
+<li><a href="#ia-aleatoire">IA Aleatoire</a></li>
+<li><a href="#ia-non-tricheuse">IA non-tricheuse</a></li>
+<li><a href="#ia-de-recommandation">IA de recommandation</a></li>
+<li><a href="#ia-de-recommandation-optimisee">IA de recommandation optimisee</a></li>
+</ul></li>
+<li><a href="#points-techniques">Points techniques</a><ul>
+<li><a href="#listes-triees">Listes triees</a></li>
+<li><a href="#fonction-deduce_number-conversion-indice-chiffre-en-chaine-de-caracteres">Fonction deduce_number : Conversion indice chiffre en chaine de caracteres</a></li>
+<li><a href="#algo-recommendationstrategy">Algo RecommendationStrategy</a></li>
+<li><a href="#algo-recommendationstrategy_3">Algo RecommendationStrategy_3</a></li>
+</ul></li>
+<li><a href="#tests-unitaires-ou-de-non-régression">Tests unitaires ou de non-régression</a><ul>
+<li><a href="#test-unitaire-give_a_hint">Test unitaire : give_a_hint</a></li>
+<li><a href="#test-unitaire-deduce_my_moves">Test unitaire : deduce_my_moves</a></li>
+<li><a href="#test-unitaire-play">Test unitaire : play</a></li>
+</ul></li>
+<li><a href="#tests-en-série---statistiques---analyse-des-résultats">Tests en série - statistiques - analyse des résultats</a><ul>
+<li><a href="#ai-recommendationstrategy">AI RecommendationStrategy</a></li>
+<li><a href="#ai-recommendationstrategy-avec-indices-optimisés">AI RecommendationStrategy avec indices optimisés</a></li>
+<li><a href="#ai-recommendationstrategy-avec-indices-optimisés-version-2">AI RecommendationStrategy avec indices optimisés version 2</a></li>
+</ul></li>
+<li><a href="#conclusion-et-perspectives">Conclusion et perspectives</a></li>
+</ul></li>
+</ul>
+</div>
+<h1 id="in104---rapport-du-projet-hanabi">IN104 - Rapport du projet Hanabi</h1>
+<p>Auteurs : Quach Christine - Gregorio Nina<br />
+Lien github de notre projet : https://github.com/Naiina/Christine_Quach_Nina_Gregorio_Hanabi</p>
+<h2 id="stratégie-retenue">Stratégie retenue</h2>
+<h3 id="ia-aleatoire">IA Aleatoire</h3>
+<ul>
+<li>Nous avons d'abord crée une IA qui joue de façon aléatoire afin de nnous familiarise avec les classes AI, Deck, Hand et Game.</li>
+</ul>
+<h3 id="ia-non-tricheuse">IA non-tricheuse</h3>
+<ul>
+<li>Nous avons ensuite choisi de modifier l'IA Cheater en faisant en sorte qu'elle ne triche plus. Pour cela il a fallu modifier :
+<ul>
+<li>Les listes playable, discardable, precious, mynotprecious, myprecious, pour avoir seulement les listes des cartes pour lesquelles l'IA a recu des indices (que l'IA conait).</li>
+</ul></li>
+<li>Puis nous avons apporté des ameliorations de strategie. Notamment :
+<ul>
+<li>Des le debut de partie, en prioriter, donner l'indice 1 ou jouer les cartes 1.</li>
+<li>Jouer uniquement les cartes dont on est 100% surs</li>
+</ul></li>
+</ul>
+<h3 id="ia-de-recommandation">IA de recommandation</h3>
+<ul>
+<li>Nous avons decidé d'ameliorer notre IA non-tricheuse avec la strategie de Recommendation détaillé dans l'article. Pour cela nous avons opte pour la structure de code suivant :
+<ul>
+<li><ol style="list-style-type: decimal">
+<li>Fonction aui decide de la meilleur action a faire pour chaque main.</li>
+</ol></li>
+<li><ol start="2" style="list-style-type: decimal">
+<li>Fonction qui permet de donner l'indice aui serait une recommandatio pour les 4 autres joueurs.</li>
+</ol></li>
+<li><ol start="3" style="list-style-type: decimal">
+<li>Fonction qui permet l'interpretation de cette indice.</li>
+</ol></li>
+<li><ol start="4" style="list-style-type: decimal">
+<li>Fonction qui decide de l'action effectivement effectuee.</li>
+</ol></li>
+</ul></li>
+</ul>
+<h3 id="ia-de-recommandation-optimisee">IA de recommandation optimisee</h3>
+<ul>
+<li>Enfin nous avons tente d'optimiser cette IA, en apportant des modifications de strategie :
+<ul>
+<li>Les indices n'etant pas exploités au maximum, nous avons choisi d'indiquer également le nombre de joueurs pouvant jouer de façon simultané afin d'optimiser l'utilisation des indices</li>
+<li>En début de partie, afin de pousser les joueurs qui peuvent le faire à jeter lorsqu'il n'y a plus beaucoup d'indices, on divise le jeux en deux phases:
+<ul>
+<li>Dans la première : s'il ne reste que deux jetons et qu'un joueur peut jeter une carte, il le fait au lieu de donner un indice.</li>
+<li>Dans la deuxième : il donne préférentiellement un indice.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="points-techniques">Points techniques</h2>
+<h3 id="listes-triees">Listes triees</h3>
+<p>Pour recommander les cartes par priorite d'anciennete ou de rang on utilise la syntaxe suivante :</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">    <span class="co">#on trie les cartes par ordre decroissant de rang, et par anciennete les plus anciennes avant</span>
+        playable.sort(key<span class="op">=</span><span class="kw">lambda</span> p: (<span class="op">-</span>p[<span class="dv">1</span>],p[<span class="dv">0</span>]))</code></pre></div>
+<h3 id="fonction-deduce_number-conversion-indice-chiffre-en-chaine-de-caracteres">Fonction deduce_number : Conversion indice chiffre en chaine de caracteres</h3>
+<p>Pour convertir un indice d'action en un chiffre, nous avons utilise le tableau suivant : | action | indice_chiffre | p/d | carte | | - | - | - | - | | p1 | 0 | 0 | 1 | | p2 | 1 | 0 | 2 | | p3 | 2 | 0 | 3 | | p4 | 3 | 0 | 4 | | d1 | 4 | 3 | 1 | | d2 | 5 | 3 | 2 | | d3 | 6 | 3 | 3 | | d4 | 7 | 3 | 4 |</p>
+<p>On associe l'action 'p' au chiffre 0 et 'd' a 3.</p>
+<p>On utilise l'indice de type int pour chercher directement son equivalent en chaine de caractere dans la liste.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">    IND<span class="op">=</span>[<span class="st">&#39;c11&#39;</span>,<span class="st">&#39;c12&#39;</span>,<span class="st">&#39;c13&#39;</span>,<span class="st">&#39;c14&#39;</span>,<span class="st">&#39;cr1&#39;</span>,<span class="st">&#39;cr2&#39;</span>,<span class="st">&#39;cr3&#39;</span>,<span class="st">&#39;cr4&#39;</span>]
+        A<span class="op">=</span>IND[hint]</code></pre></div>
+<h3 id="algo-recommendationstrategy">Algo RecommendationStrategy</h3>
+<pre><code>- Ajout dans deck d&#39;une liste mémoire afin que les joueurs puissent mémoriser au moment où est donné l&#39;indice ce qu&#39;ils doivent faire.
+- Utilisation de sefl.game.moves pour déduir quel est le numéro du joueur en cours, combien de cartes ont éte jouées depuis le dernier indice, quel est le dernier indice donné.
+- Des fonctions qui fond les conversions entre les indices en string du type &quot;c1A&quot; les indices en int entre 0 et 7 et ce qu&#39;ils représentent pour le joueur dont c&#39;est le tour en fonction de quand ils ont étés données, afin de ne pas se mélanger dans touuus ces indices différents
+- Un fichier pour lancer le jeu en une ligne de commende au lieu de 4</code></pre>
+<h3 id="algo-recommendationstrategy_3">Algo RecommendationStrategy_3</h3>
+<pre><code>- Une liste qui tient compte du nombre de joueurs pouvant jouer d&#39;affilé pour optimiser l&#39;algo précédent (nécéssité de modifier la maorité des fonctions en conséquence)</code></pre>
+<h2 id="tests-unitaires-ou-de-non-régression">Tests unitaires ou de non-régression</h2>
+<h3 id="test-unitaire-give_a_hint">Test unitaire : give_a_hint</h3>
+<p>On verifie, a travers ce test, que l'indice qui est donne est le bon. Voici la configuration dans laquelle on se place pour realiser ce test : <img src="src/hanabi/test1.png" alt="Configuration de jeu, test 1" /></p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">    <span class="kw">def</span> test_give_a_hint_2(<span class="va">self</span>):
+        game <span class="op">=</span> hanabi.Game(<span class="dv">5</span>)
+        RS<span class="op">=</span>hanabi.ai.RecommendationStrategy(game) 
+        c1 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">2</span>)
+        c2 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">1</span>)
+        c3 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">1</span>)
+        c4 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">1</span>)
+
+        c5 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">1</span>)
+        c6 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">5</span>)
+        c7 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">5</span>)
+        c8 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">5</span>)
+
+        c9 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">1</span>)
+        c10 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">2</span>)
+        c11 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">1</span>)
+        c12  <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">1</span>)
+
+        c13 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">4</span>)
+        c14 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">1</span>)
+        c15 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">2</span>)
+        c16 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">5</span>)
+
+        c17 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">3</span>)
+        c18 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">3</span>)
+        c19 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">4</span>)
+        c20 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">4</span>)
+
+        game.piles[hanabi.deck.Color.Blue]<span class="op">=</span><span class="dv">1</span>
+        game.piles[hanabi.deck.Color.Red]<span class="op">=</span><span class="dv">1</span>
+        game.piles[hanabi.deck.Color.Green]<span class="op">=</span><span class="dv">1</span>
+        game.piles[hanabi.deck.Color.Yellow]<span class="op">=</span><span class="dv">1</span>
+
+        ok1<span class="op">=</span>hanabi.deck.Deck([c1,c2,c3,c4]) 
+        hand1 <span class="op">=</span> hanabi.deck.Hand(ok1, <span class="dv">4</span>)
+        ok2<span class="op">=</span>hanabi.deck.Deck([c5,c6,c7,c8])
+        hand2 <span class="op">=</span> hanabi.deck.Hand(ok2, <span class="dv">4</span>) 
+        ok3<span class="op">=</span>hanabi.deck.Deck([c9,c10,c11,c12])
+        hand3 <span class="op">=</span> hanabi.deck.Hand(ok3, <span class="dv">4</span>)
+        ok4<span class="op">=</span>hanabi.deck.Deck([c13,c14,c15,c16])
+        hand4 <span class="op">=</span> hanabi.deck.Hand(ok4, <span class="dv">4</span>)
+        ok5<span class="op">=</span>hanabi.deck.Deck([c17,c18,c19,c20])
+        hand5 <span class="op">=</span> hanabi.deck.Hand(ok5, <span class="dv">4</span>)
+        hanabi.ai.RecommendationStrategy.other_hands<span class="op">=</span>[hand1,hand2,hand3,hand4]
+        <span class="va">self</span>.assertEqual(hanabi.ai.RecommendationStrategy.give_a_hint(RS), <span class="st">&#39;cr4&#39;</span>)</code></pre></div>
+<h3 id="test-unitaire-deduce_my_moves">Test unitaire : deduce_my_moves</h3>
+<p>On reprend la meme configuration et on teste si le joueur 2 a bien interprete son indice. Voici la configuration dans laquelle on se place pour realiser ce test : <img src="src/hanabi/test2.png" alt="Configuration de jeu, test 2" /></p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">    <span class="kw">def</span> test_deduce_my_moves_2(<span class="va">self</span>):  
+        game <span class="op">=</span> hanabi.Game(<span class="dv">5</span>)
+        RS<span class="op">=</span>hanabi.ai.RecommendationStrategy(game) 
+        c1 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">2</span>)
+        c2 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">1</span>)
+        c3 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">1</span>)
+        c4 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">1</span>)
+
+        c5 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">1</span>)
+        c6 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">5</span>)
+        c7 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">5</span>)
+        c8 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">5</span>)
+
+        c9 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">1</span>)
+        c10 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">2</span>)
+        c11 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">1</span>)
+        c12  <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">1</span>)
+
+        c13 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">4</span>)
+        c14 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">1</span>)
+        c15 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">2</span>)
+        c16 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">5</span>)
+
+        c17 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">3</span>)
+        c18 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">3</span>)
+        c19 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">4</span>)
+        c20 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">4</span>)
+
+        game.piles[hanabi.deck.Color.Blue]<span class="op">=</span><span class="dv">1</span>
+        game.piles[hanabi.deck.Color.Red]<span class="op">=</span><span class="dv">1</span>
+        game.piles[hanabi.deck.Color.Green]<span class="op">=</span><span class="dv">1</span>
+        game.piles[hanabi.deck.Color.Yellow]<span class="op">=</span><span class="dv">1</span>
+
+        ok1<span class="op">=</span>hanabi.deck.Deck([c1,c2,c3,c4]) 
+        hand1 <span class="op">=</span> hanabi.deck.Hand(ok1, <span class="dv">4</span>)
+        ok2<span class="op">=</span>hanabi.deck.Deck([c5,c6,c7,c8])
+        hand2 <span class="op">=</span> hanabi.deck.Hand(ok2, <span class="dv">4</span>) 
+        ok3<span class="op">=</span>hanabi.deck.Deck([c9,c10,c11,c12])
+        hand3 <span class="op">=</span> hanabi.deck.Hand(ok3, <span class="dv">4</span>)
+        ok4<span class="op">=</span>hanabi.deck.Deck([c13,c14,c15,c16])
+        hand4 <span class="op">=</span> hanabi.deck.Hand(ok4, <span class="dv">4</span>)
+        ok5<span class="op">=</span>hanabi.deck.Deck([c17,c18,c19,c20])
+        hand5 <span class="op">=</span> hanabi.deck.Hand(ok5, <span class="dv">4</span>)
+        hanabi.ai.RecommendationStrategy.other_hands<span class="op">=</span>[hand3,hand4,hand5,hand1]
+        <span class="va">self</span>.assertEqual(hanabi.ai.RecommendationStrategy.deduce_my_moves(RS,<span class="st">&#39;cr4&#39;</span>,<span class="dv">3</span>), <span class="st">&#39;d1&#39;</span>)</code></pre></div>
+<h3 id="test-unitaire-play">Test unitaire : play</h3>
+<p>On verifie que si une carte a deja ete jouee depuis que le dernier indice a ete donne et qu'il y a deja 2 jetons rouge, l'IA choisit l'action de donner un indice. On verifie egalement qu'elle donne le bon indice.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">    <span class="kw">def</span> test_play(<span class="va">self</span>):
+        game <span class="op">=</span> hanabi.Game(<span class="dv">5</span>)
+        RS<span class="op">=</span>hanabi.ai.RecommendationStrategy(game)
+
+        c1 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">1</span>)
+        c2 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Red,<span class="dv">2</span>)
+        c3 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">1</span>)
+        c4 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">1</span>)
+        c5 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Blue,<span class="dv">3</span>)
+        c6 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Green,<span class="dv">3</span>)
+        c7 <span class="op">=</span> hanabi.deck.Card(hanabi.deck.Color.Yellow,<span class="dv">3</span>)
+        game.piles[hanabi.deck.Color.Blue]<span class="op">=</span><span class="dv">0</span>
+        game.piles[hanabi.deck.Color.Red]<span class="op">=</span><span class="dv">1</span>
+        game.piles[hanabi.deck.Color.Green]<span class="op">=</span><span class="dv">0</span>
+        game.piles[hanabi.deck.Color.Yellow]<span class="op">=</span><span class="dv">0</span>
+        ok1<span class="op">=</span>hanabi.deck.Deck([c5,c2,c6,c7]) 
+        hand1 <span class="op">=</span> hanabi.deck.Hand(ok1, <span class="dv">4</span>)
+        ok2<span class="op">=</span>hanabi.deck.Deck([c5,c6,c1,c7])
+        hand2 <span class="op">=</span> hanabi.deck.Hand(ok2, <span class="dv">4</span>) 
+        ok3<span class="op">=</span>hanabi.deck.Deck([c1,c7,c5,c6])
+        hand3 <span class="op">=</span> hanabi.deck.Hand(ok3, <span class="dv">4</span>)
+        ok4<span class="op">=</span>hanabi.deck.Deck([c4,c6,c5,c7])
+        hand4 <span class="op">=</span> hanabi.deck.Hand(ok4, <span class="dv">4</span>)
+
+        game.red_coins<span class="op">=</span><span class="dv">2</span>
+        game.blue_coins<span class="op">=</span><span class="dv">5</span>
+
+        game.moves<span class="op">=</span>[<span class="st">&#39;cr4&#39;</span>,<span class="st">&#39;p2&#39;</span>]
+        game.memoire<span class="op">=</span>[<span class="op">-</span><span class="dv">1</span>,<span class="st">&#39;p2&#39;</span>,<span class="st">&#39;p3&#39;</span>,<span class="st">&#39;p1&#39;</span>,<span class="st">&#39;d1&#39;</span>]
+
+        hanabi.ai.RecommendationStrategy.other_hands<span class="op">=</span>[hand1,hand2,hand3,hand4]
+        <span class="va">self</span>.assertEqual(hanabi.ai.RecommendationStrategy.play(RS), <span class="st">&#39;c14&#39;</span>)</code></pre></div>
+<h2 id="tests-en-série---statistiques---analyse-des-résultats">Tests en série - statistiques - analyse des résultats</h2>
+<p>Le script <code>plot_games.py</code> lance les AI 10000 fois.</p>
+<p>### Random and NotCheater AI</p>
+<div class="figure">
+<img src="src/hanabi/NotCheater_10000.png" alt="Histogramme de l&#39;AI NotCheater" />
+<p class="caption">Histogramme de l'AI NotCheater</p>
+</div>
+<p><img src="src/hanabi/Random_10000.png" alt="Les 3 histogrammes de l&#39;AI Random" /><br />
+Le score moyen obtenu est de 1.97 pour le NotCheater et de 1.26 pour le Random ce qui est evidament peu satisfaisant. L'algorithme NotCheater donne des indices sans forcément tenter de compltéter des demi-indices ce qui explique que peu de joueurs ont assez d'informations pour poser une carte. Il consomme de plus beaucoup d'indices ce qui oblige les joueurs a jeter souvent; Jetant à l'aveugle le jeu est rapidement bloqué.</p>
+<h3 id="ai-recommendationstrategy">AI RecommendationStrategy</h3>
+<p><img src="src/hanabi/RecommendationStrategy_10000.png" alt="Histogramme de l&#39;AI RecommendationStrategy" /><br />
+Le score moyen est de 21.20, ce qui est étonnant car l'article atteind 23. Il nous semble pourtant avoir suivi les instructions précises du document.</p>
+<h3 id="ai-recommendationstrategy-avec-indices-optimisés">AI RecommendationStrategy avec indices optimisés</h3>
+<p><img src="src/hanabi/RecommendationStrategy_3" alt="Histogramme de l&#39;AI RecommendationStrategy_3" /><br />
+Le score moyen est de 23.17, ce qui est un peu suppérieur à celui de l'article. Pourtant certains jeux se terminent avec un score iférieur à 15 ce qui n'était pas observé pour l'algo précédent. Certaines cartes sont certainement jetée de façon non optimales et bloquent le jeu.</p>
+<h3 id="ai-recommendationstrategy-avec-indices-optimisés-version-2">AI RecommendationStrategy avec indices optimisés version 2</h3>
+<p><img src="src/hanabi/RecommendationStrategy_4.png" alt="Histogramme de l&#39;AI RecommendationStrategy_4" /><br />
+Le score moyen est de 23.45. On a réduit une partie des très mauvais résultats. Il faudrait optimiser le réglage des paramètres, voir faire trois phases.</p>
+<h2 id="conclusion-et-perspectives">Conclusion et perspectives</h2>
+<p>Pour conclure, l'IA code par strategie de recommendation permet d'obtenir des resultats satisfaisants. Cependant l'utilisation incomplete des indices dans cette strategie nous a amene a coder une nouvelle IA optimise, dont les resultats montrent bien une amelioration du jeu significative.</p>
+<p>D'autres ameliorations pourraient etre egalement envisagees : Il serait intéréssant de pouvoir indicer au joueurs suivant le premier joueur qui pose une carte, de jouer par dessus celle ci si cela est possible, sans avoir besoin d'un indice suplémentaire.</p>
+<p>Par exemple:<br />
+Benji: B1 W5 ...<br />
+Clara: B1 B2 ...<br />
+Si benji pose son B1 clara aurait intérêt a poser le B2 et non le B1 qui est pourtant indicé d'après l'ordre des priorités actelles. Avec les indices 5 restant on pourrait peut-etre indiquer aux joueurs qui peuvent jouer s'ils doivent prendre en compte leur première ou leur deuxième carte par ordre de priorité</p>
+<p>En poussant le raisonnement plus loin on pourrait essayer d'optimiser chaque indice afin qu'il permette au plus de joueurs de jouer d'affilé.</p>
+<p>Par exemple:<br />
+Alice: B1 R1<br />
+Benji: R2..<br />
+On indicerait plutôt a alice de jouer son R1 qui son B1, ie elle jouerait sa carte de priorité 2 et benji la première.</p>
+</body>
+</html>
