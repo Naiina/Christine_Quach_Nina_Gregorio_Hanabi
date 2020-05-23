@@ -852,6 +852,16 @@ class RecommendationStrategy_3(AI):
 
 
 class RecommendationStrategy_4(AI):
+
+    def quatres_jeux_daffile(self):
+        NumberOfMoves=len(self.game.moves)
+        if NumberOfMoves>5:
+            if self.game.moves[NumberOfMoves-4][0]!='c' and self.game.moves[NumberOfMoves-3][0]!= 'c' and self.game.moves[NumberOfMoves-2][0]!= 'c' and self.game.moves[NumberOfMoves-1][0]!='c' and self.game.moves[NumberOfMoves-5][0]!= 'c':
+                self.game.memoire[0]="rien"
+                self.game.memoire[2]="rien"
+                self.game.memoire[3]="rien"
+                self.game.memoire[4]="rien"
+                self.game.memoire[1]="rien"
     def current_player_number(self):
         i=len(self.game.moves)
         return(i%5)
@@ -1049,6 +1059,7 @@ class RecommendationStrategy_4(AI):
         '''
         game = self.game
         print("memoire",self.game.memoire)
+        self.quatres_jeux_daffile()
         if len(self.game.moves)>0:
             recommendation=self.game.memoire[self.current_player_number()]
             if recommendation[0]=='p':
